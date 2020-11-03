@@ -15,6 +15,7 @@ namespace Backend.Controller.PatientControllers
     public class PatientScheduleController
     {
         // Test za pipeline
+        // TEST ZA PR
         public PatientScheduleController()
         {
             appointmentSchedulingService = new AppointmentSchedulingService(new PatientSchedulingStrategy());
