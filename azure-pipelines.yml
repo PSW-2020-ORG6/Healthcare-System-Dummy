@@ -19,7 +19,14 @@ steps:
   displayName: 'Run a multi-line script'
 
 schedules:
-- cron: "30 16 04 11 *"
+- cron: "51 15 04 11 *"
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      
+      echo 'Hello world'
   displayName: Disable commits at the end of sprint
   branches:
     include:
