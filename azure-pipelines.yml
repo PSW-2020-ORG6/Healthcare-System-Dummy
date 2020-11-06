@@ -7,7 +7,7 @@ variables:
   buildConfiguration: 'Release'
 
 schedules:
-- cron: '40 18 06 11 5'
+- cron: '46 18 06 11 *'
   displayName: read permission
   branches:
     include:
