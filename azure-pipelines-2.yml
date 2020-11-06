@@ -1,0 +1,22 @@
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+schedules:
+- cron: "59 23 * * 7/2"
+  displayName: change read/write permission
+  branches:
+    include:
+    - master
+    - develop
+  always: true
+
+steps:
+- task: CmdLine@2
+  inputs:
+    script: |
+      curl -X PUT -H "Accept: application/vnd.github.v3+json" -H "Authorization: token $(token)" https://api.github.com/orgs/PSW-2020-ORG6/teams/Developers/repos/PSW-2020-ORG6/Health-Clinic-Dummy -D '{"permission":"pull"}' -i
