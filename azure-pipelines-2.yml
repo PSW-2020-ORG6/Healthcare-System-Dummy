@@ -6,14 +6,6 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
-schedules:
-- cron: "0 0 * * 7/2"
-  displayName: change read/write permission
-  branches:
-    include:
-    - develop
-  always: true
-
 steps:
 - task: CmdLine@2
   inputs:
