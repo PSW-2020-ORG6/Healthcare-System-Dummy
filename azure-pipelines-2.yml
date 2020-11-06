@@ -7,7 +7,7 @@ variables:
   buildConfiguration: 'Release'
 
 schedules:
-- cron: "59 23 * * 7/2"
+- cron: "59 23 * * 7"
   displayName: change read/write permission
   branches:
     include:
