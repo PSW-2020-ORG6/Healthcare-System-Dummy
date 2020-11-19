@@ -5,9 +5,8 @@
 
 using Backend.Dto;
 using Model.Util;
-using System;
 using Newtonsoft.Json;
-
+using System;
 
 namespace Model.Accounts
 {
@@ -20,24 +19,25 @@ namespace Model.Accounts
         private string password;
 
         public Patient(string name, string surname, string id, DateTime dateOfBirth, string contact, string email, Address address, string parentName, string gender, string password, bool isGuest = false)
-            : base(Guid.NewGuid().ToString(), name, surname, id, dateOfBirth, contact, email, address, password)
+            : base(Guid.NewGuid().ToString(), name, surname, id, dateOfBirth, contact, email, address)
         {
             this.parentName = parentName;
             this.gender = gender;
             this.Guest = isGuest;
             this.password = password;
         }
+
         [JsonConstructor]
         public Patient(string serialNumber, string name, string surname, string id, DateTime dateOfBirth, string contact, string email, Address address, string parentName, string gender, string password, bool isGuest = false)
-            : base(serialNumber, name, surname, id, dateOfBirth, contact, email, address, password)
+            : base(serialNumber, name, surname, id, dateOfBirth, contact, email, address)
         {
             this.parentName = parentName;
             this.gender = gender;
             this.Guest = isGuest;
             this.password = password;
         }
-        [JsonConstructor]
-        public Patient(PatientDTO patientDTO) : base(Guid.NewGuid().ToString(), patientDTO.Name, patientDTO.Surname, patientDTO.Id, patientDTO.DateOfBirth, patientDTO.Contact, patientDTO.Email, patientDTO.Address, patientDTO.Password)
+
+        public Patient(PatientDTO patientDTO) : base(Guid.NewGuid().ToString(), patientDTO.Name, patientDTO.Surname, patientDTO.Id, patientDTO.DateOfBirth, patientDTO.Contact, patientDTO.Email, patientDTO.Address)
         {
             this.parentName = patientDTO.ParentName;
             this.gender = patientDTO.Gender;
@@ -45,12 +45,11 @@ namespace Model.Accounts
             this.password = patientDTO.Password;
             Console.WriteLine(Guest);
         }
-        public Patient() : base() { }
 
-        public string ParentName { get => parentName; set => parentName = value; }
-        public string Gender { get => gender; set => gender = value; }
+        public string ParentName { get => parentName; }
+        public string Gender { get => gender; }
         public bool Guest { get => guest; set => guest = value; }
-        public string Password { get => password; set => password = value; }
+        public string Password { get => password; }
 
         public override string ToString()
         {

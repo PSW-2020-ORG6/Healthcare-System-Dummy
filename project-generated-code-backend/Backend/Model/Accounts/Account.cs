@@ -18,21 +18,17 @@ namespace Model.Accounts
         protected String contact;
         protected String email;
         protected Address address;
-        protected String password;
 
-        public string Name { get => name; set => name = value; }
-        public string Surname { get => surname; set => surname = value; }
+        public string Name { get => name; }
+        public string Surname { get => surname; }
         public string FullName { get => name + " " + surname; }
+        public string Id { get => id; }
+        public DateTime DateOfBirth { get => dateOfBirth; }
+        public string Contact { get => contact; }
+        public string Email { get => email; }
+        public Address Address { get => address; }
 
-        public string Id { get => id; set => id = value; }
-        public DateTime DateOfBirth { get => dateOfBirth; set => dateOfBirth = value; }
-        public string Contact { get => contact; set => contact = value; }
-        public string Email { get => email; set => email = value; }
-        public virtual Address Address { get => address; set => address = value; }
-
-        public String Password { get => password; }
-
-        public Account(String serialNumber, string name, string surname, string id, DateTime dateOfBirth, string contact, string email, Address address, String password) : base(serialNumber)
+        public Account(String serialNumber, string name, string surname, string id, DateTime dateOfBirth, string contact, string email, Address address) : base(serialNumber)
         {
             this.name = name;
             this.surname = surname;
@@ -41,25 +37,7 @@ namespace Model.Accounts
             this.contact = contact;
             this.email = email;
             this.address = address;
-            this.password = password;
         }
-        public Account(String serialNumber, string name, string surname, string id, DateTime dateOfBirth, string contact, string email) : base(serialNumber)
-        {
-            this.name = name;
-            this.surname = surname;
-            this.id = id;
-            this.dateOfBirth = dateOfBirth;
-            this.contact = contact;
-            this.email = email;
-
-        }
-        public Account(String serialNumber, string name, string surname, string id) : base(serialNumber)
-        {
-            this.name = name;
-            this.surname = surname;
-            this.id = id;
-        }
-        public Account() { }
 
         public override int GetHashCode()
         {
