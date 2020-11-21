@@ -16,15 +16,11 @@ variables:
  
 steps:
 - task: NuGetToolInstaller@1
- 
-- task: UseDotNet@2
-  inputs:
-    version: '3.0.x'
-    packageType: runtime
 
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
+
 
 - task: SonarSource.sonarcloud.14d9cde6-c1da-4d55-aa01-2965cd301255.SonarCloudPrepare@1
   displayName: 'Prepare analysis on SonarCloud'
@@ -33,6 +29,11 @@ steps:
     organization: 'health-care-system'
     projectKey: 'lukadoric_Health-Care-System-Dummy'
     projectName: 'Health-Care-System-Dummy'
+
+- task: UseDotNet@2
+  inputs:
+    version: '3.0.x'
+    packageType: runtime
 
 - task: VSBuild@1
   inputs:
