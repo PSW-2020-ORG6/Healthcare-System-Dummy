@@ -57,10 +57,3 @@ steps:
   inputs:
     pollingTimeoutSec: '300'
 
-
-- task: rvo.SendEmailTask.send-email-build-task.SendEmail@1
-  displayName: 'Send an email with subject Pipeline status'
-  inputs:
-    To: 'Vladimir.budjen@uns.ac.rs;luka.doric@uns.ac.rs'
-    From: 'luka.doric@uns.ac.rs'
-    Subject: 'Pipeline status'
