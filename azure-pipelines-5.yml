@@ -50,16 +50,16 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: SonarSource.sonarcloud.ce096e50-6155-4de8-8800-4221aaeed4a1.SonarCloudAnalyze@1
-  displayName: 'Run Code Analysis'
-
-- task: SonarSource.sonarcloud.38b27399-a642-40af-bb7d-9971f69712e8.SonarCloudPublish@1
-  displayName: 'Publish Quality Gate Result'
+- task: DotNetCoreCLI@2
   inputs:
-    pollingTimeoutSec: '300'
+    command: 'publish'
+    publishWebProjects: false
+    projects: '/WebApplication/*.csproj'
+    arguments: '--configuration $(BuildConfiguration) --output WebPublish/build'
+    zipAfterPublish: False
 
-- task: PublishBuildArtifacts@1
+- task: CopyFiles@2
   inputs:
-    PathtoPublish: '/Publish'
-    ArtifactName: 'artifact'
-    publishLocation: 'Container'
+    SourceFolder: 'WebApplication'
+    Contents: 'Dockerfile'
+    TargetFolder: 'WebPublish'
