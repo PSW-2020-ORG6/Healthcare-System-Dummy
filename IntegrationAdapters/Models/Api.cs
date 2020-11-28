@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntegrationAdapters.Models
 {
-    
+
     public class Api
     {
         [Key]
@@ -16,5 +16,11 @@ namespace IntegrationAdapters.Models
 
         public Api() {}
 
+        public Api(string Key, string PharmacyName, string Url)
+        {
+            this.Key = Key;
+            this.PharmacyName = PharmacyName;
+            this.Url = Url;
+        }
     }
 }
