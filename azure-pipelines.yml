@@ -34,8 +34,15 @@ steps:
           clsx \
          axios \
           @babel/runtime
-      dotnet publish WebApplication.csproj -c Release -o publish && trace_output "DOTNET DONE"
-      cp Dockerfile publish && trace_output "DOCKER CP TO PUBLISH"
+      if dotnet publish WebApplication.csproj -c Release -o publish; then
+      echo "dotnet succeeded"
+      else 
+      echo "dotnet failed"
+      if cp Dockerfile publish && trace_output "DOCKER CP TO PUBLISH"; then
+      echo "cp succeeded"
+      else 
+      echo "cp failed"
+      
 
 - task: Docker@2
   inputs:
