@@ -36,6 +36,8 @@ steps:
           @babel/runtime
       dotnet publish WebApplication.csproj -c Release -o publish
       cp Dockerfile publish
+      cd publish
+      ls
       
 - task: Docker@2
   inputs:
