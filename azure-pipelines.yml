@@ -1,56 +1,49 @@
-# ASP.NET Core (.NET Framework)
-
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
- 
 trigger:
 - develop
- 
+
 pool:
-  vmImage: 'windows-latest'
- 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  vmImage: ubuntu-18.04
+
 
 steps:
 
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
-
 - task: UseDotNet@2
   inputs:
-    version: '3.0.x'
-    packageType: runtime
+    version: '3.1.x'
+    packageType: sdk
 
-- task: VSBuild@1
+- task: Bash@3
+  displayName: Build, Test, Publish
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    projects: '/WebApplication/*.csproj'
-    arguments: '--configuration $(BuildConfiguration) --output **/WebPublish/build'
-    zipAfterPublish: False
-
+    targetType: 'inline'
+    script: |
+      docker --version
+      cd WebApplication
+      npm install \
+          react-toastify \
+          react-transition-group \
+          regenerator-runtime \
+          react-is \
+          prop-types \
+          object-assign \
+          loose-envify \
+          js-tokens \
+          follow-redirects \
+          dom-helpers \
+          csstype \
+          clsx \
+          axios \
+          @babel/runtime
+      dotnet publish WebApplication/WebApplication.csproj -c Release -o publish
+      cp WebApplication/Dockerfile publish
+      
 - task: Docker@2
   inputs:
     containerRegistry: 'DockerConnection'
-    repository: 'budjenvladimir / health_clinic_web_application'
+    repository: 'budjenvladimir/health_clinic_web_application'
     command: 'buildAndPush'
-    Dockerfile: '**/WebPublish/Dockerfile'
+    Dockerfile: 'WebApplication/publish/Dockerfile'
+    buildContext: 'WebApplication/publish'
     tags: |
       $(Build.BuildId)
       latest
-
