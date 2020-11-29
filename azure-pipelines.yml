@@ -18,7 +18,6 @@ steps:
     targetType: 'inline'
     script: |
       docker --version
-      cd WebApplication
       npm install \
           react-toastify \
           react-transition-group \
@@ -34,8 +33,8 @@ steps:
           clsx \
           axios \
           @babel/runtime
-      dotnet publish WebApplication.csproj -c Release -o publish
-      cp Dockerfile publish
+      dotnet publish WebApplication/WebApplication.csproj -c Release -o publish
+      cp WebApplication/Dockerfile publish
       
 
 - task: Docker@2
@@ -43,8 +42,8 @@ steps:
     containerRegistry: 'DockerConnection'
     repository: 'budjenvladimir/health_clinic_web_application'
     command: 'buildAndPush'
-    Dockerfile: 'publish/Dockerfile'
-    buildContext: 'publish'
+    Dockerfile: 'WebApplication/publish/Dockerfile'
+    buildContext: 'WebApplication/publish'
     tags: |
       $(Build.BuildId)
       latest
