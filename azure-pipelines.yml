@@ -34,17 +34,15 @@ steps:
           clsx \
           axios \
           @babel/runtime
-      dotnet publish WebApplication.csproj -c Release -o publish
+      echo dotnet publish WebApplication.csproj -c Release -o publish
       cp Dockerfile publish
-      cd publish
-      ls
-      
+
 - task: Docker@2
   inputs:
     containerRegistry: 'DockerConnection'
     repository: 'budjenvladimir/health_clinic_web_application'
     command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
+    Dockerfile: 'publish/Dockerfile'
     buildContext: 'publish'
     tags: |
       $(Build.BuildId)
