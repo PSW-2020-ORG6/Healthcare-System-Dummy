@@ -34,7 +34,7 @@ steps:
           clsx \
           axios \
           @babel/runtime
-      dotnet publish WebApplication/WebApplication.csproj -c Release -o publish
+      dotnet publish WebApplication.csproj -c Release -o publish
       cp WebApplication/Dockerfile publish
       
 - task: Docker@2
