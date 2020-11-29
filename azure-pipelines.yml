@@ -35,7 +35,7 @@ steps:
           axios \
           @babel/runtime
       dotnet publish WebApplication.csproj -c Release -o publish
-      cp WebApplication/Dockerfile publish
+      cp Dockerfile publish
       
 - task: Docker@2
   inputs:
