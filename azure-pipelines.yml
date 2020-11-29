@@ -34,8 +34,8 @@ steps:
           clsx \
          axios \
           @babel/runtime
-      dotnet publish WebApplication.csproj -c Release -o publish
-      cp Dockerfile publish
+      dotnet publish WebApplication.csproj -c Release -o publish && trace_output "DOTNET DONE"
+      cp Dockerfile publish && trace_output "DOCKER CP TO PUBLISH"
 
 - task: Docker@2
   inputs:
