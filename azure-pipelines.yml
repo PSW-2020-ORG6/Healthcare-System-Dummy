@@ -41,7 +41,7 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: '/WebApplication/*.csproj'
-    arguments: '--configuration $(BuildConfiguration) --output WebPublish/build'
+    arguments: '--configuration $(BuildConfiguration) --output /WebPublish/build'
     zipAfterPublish: False
 
 - task: Docker@2
@@ -49,7 +49,7 @@ steps:
     containerRegistry: 'DockerConnection'
     repository: 'budjenvladimir / health_clinic_web_application'
     command: 'buildAndPush'
-    Dockerfile: 'WebPublish/Dockerfile'
+    Dockerfile: '/WebPublish/Dockerfile'
     tags: |
       $(Build.BuildId)
       latest
