@@ -44,7 +44,7 @@ steps:
     containerRegistry: 'DockerConnection'
     repository: 'budjenvladimir/health_clinic_web_application'
     command: 'buildAndPush'
-    Dockerfile: 'publish/Dockerfile'
+    Dockerfile: '**/Dockerfile'
     buildContext: 'publish'
     tags: |
       $(Build.BuildId)
