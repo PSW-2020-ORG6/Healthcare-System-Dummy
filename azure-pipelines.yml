@@ -19,26 +19,8 @@ steps:
     script: |
       docker --version
       cd WebApplication
-      npm install \
-          react-toastify \
-          react-transition-group \
-          regenerator-runtime \
-          react-is \
-          prop-types \
-          object-assign \
-          loose-envify \
-          js-tokens \
-          follow-redirects \
-          dom-helpers \
-          csstype \
-          clsx \
-          axios \
-          @babel/runtime
-      echo dotnet publish WebApplication.csproj -c Release -o publish
       dotnet publish WebApplication.csproj -c Release -o publish
-      echo cp Dockerfile publish
       cp Dockerfile publish
-      echo cp end
 
 - task: Docker@2
   inputs:
