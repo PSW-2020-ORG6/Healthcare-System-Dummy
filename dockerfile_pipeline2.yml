@@ -8,10 +8,10 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 stages:
-  - stage: Build
-
-    jobs:
-    - job: build
+- stage: build
+  displayName: Build
+  jobs:
+  - job: build
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -33,12 +33,13 @@ stages:
           platform: '$(buildPlatform)'
           configuration: '$(buildConfiguration)'
 
-  - stage : Dockerise
-    jobs:
-    - job: dockerise
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
+- stage : dockerise
+  displayName: Dockerise
+  jobs:
+  - job: Dockerise
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
     - task: Bash@3
       inputs:
         targetType: 'inline'
