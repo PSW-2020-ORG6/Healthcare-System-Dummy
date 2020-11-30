@@ -1,4 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
-WORKDIR /app
+LABEL maintainer="vladimir.budjen@uns.ac.rs"
 COPY . .
-EXPOSE 80
+EXPOSE 49900
+ENV ASPNETCORE_URLS= http://*:49900
+ENTRYPOINT ["dotnet", "WebApplication.dll"]
