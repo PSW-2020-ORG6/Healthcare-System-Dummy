@@ -9,6 +9,9 @@ variables:
   buildConfiguration: 'Release'
 stages:
   - stage: Build
+
+    jobs:
+    - job: build
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -31,6 +34,8 @@ stages:
           configuration: '$(buildConfiguration)'
 
   - stage : Dockerise
+    jobs:
+    - job: dockerise
     pool:
       vmImage: 'ubuntu-latest'
     steps:
