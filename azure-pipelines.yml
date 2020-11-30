@@ -2,7 +2,7 @@ trigger:
 - develop
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.sln'
@@ -15,9 +15,9 @@ steps:
  
 - task: UseDotNet@2
   inputs:
-    version: '3.0.x'
-    packageType: runtime
-    
+    version: '3.1.x'
+    packageType: sdk
+
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
@@ -28,11 +28,6 @@ steps:
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-
-- task: UseDotNet@2
-  inputs:
-    version: '3.1.x'
-    packageType: sdk
 
 - task: Bash@3
   inputs:
