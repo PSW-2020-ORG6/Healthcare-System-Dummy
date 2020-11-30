@@ -37,26 +37,26 @@ stages:
   displayName: Dockerise
   jobs:
   - job: Dockerise
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your PowerShell commands here.
-          docker --version
-          cd WebApplication
-          dotnet publish WebApplication.csproj -c Release -o publish
-          cp Dockerfile publish
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            # Write your PowerShell commands here.
+            docker --version
+            cd WebApplication
+            dotnet publish WebApplication.csproj -c Release -o publish
+            cp Dockerfile publish
 
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'DockerConnection'
-        repository: 'budjenvladimir/health_clinic_web_application'
-        command: 'buildAndPush'
-        Dockerfile: 'WebApplication/publish/Dockerfile'
-        buildContext: 'WebApplication/publish'
-        tags: |
-          $(Build.BuildId)
-          latest
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'DockerConnection'
+          repository: 'budjenvladimir/health_clinic_web_application'
+          command: 'buildAndPush'
+          Dockerfile: 'WebApplication/publish/Dockerfile'
+          buildContext: 'WebApplication/publish'
+          tags: |
+            $(Build.BuildId)
+            latest
