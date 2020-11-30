@@ -9,7 +9,8 @@ variables:
   buildConfiguration: 'Release'
 stages:
   - stage: Build
-    pool:vmImage: 'windows-latest'
+    pool:
+      vmImage: 'windows-latest'
     steps:
       - task: NuGetToolInstaller@1
     
@@ -30,7 +31,8 @@ stages:
           configuration: '$(buildConfiguration)'
 
   - stage : Dockerise
-    pool:vmImage: 'ubuntu-latest'
+    pool:
+      vmImage: 'ubuntu-latest'
     steps:
     - task: Bash@3
       inputs:
