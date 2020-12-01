@@ -20,6 +20,11 @@ namespace Model.Accounts
             this.specialization = new List<Specialization>();
         }
 
+        public Physitian()
+        {
+
+        }
+
         [JsonConstructor]
         public Physitian(String serialNumber, string name, string surname, string id, DateTime dateOfBirth, string contact, string email, Address address, TimeInterval workSchedule, string password, List<Specialization> specialization = null)
             : base(serialNumber, name, surname, id, dateOfBirth, contact, email, address, password)
