@@ -1,41 +1,46 @@
-﻿using health_clinic_class_diagram.Backend.Model.Hospital;
+﻿using GraphicEditor.Repositories.Interfaces;
+using Model.Hospital;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace WebApplication.Backend.Repositorys
+namespace GraphicEditor.Repositories
 {
-    public class FloorRepository : IFloorRepository
+    public class EquipmentRepository : IEquipmentRepository
     {
         private MySqlConnection connection;
-        public FloorRepository()
+        public EquipmentRepository()
         {
             connection = new MySqlConnection("server=localhost;port=3306;database=mydb;user=root;password=root");
         }
 
-        private List<Floor> GetFloors(String query)
+        private List<Equipment> GetEquipments(String query)
         {
             connection.Open();
             MySqlCommand sqlCommand = new MySqlCommand(query, connection);
             MySqlDataReader sqlReader = sqlCommand.ExecuteReader();
-            List<Floor> resultList = new List<Floor>();
+            List<Equipment> resultList = new List<Equipment>();
             while (sqlReader.Read())
             {
-                Floor entity = new Floor();
+                Equipment entity = new Equipment();
                 entity.SerialNumber = (string)sqlReader[0];
-                entity.Name = (string)sqlReader[1];
-                entity.BuildingSerialNumber = (string)sqlReader[2];
+                entity.RoomId = (string)sqlReader[1];
+                entity.Name = (string)sqlReader[2];
                 resultList.Add(entity);
+
             }
             connection.Close();
             return resultList;
         }
 
-        public List<Floor> GetAllFloors()
+        public List<Equipment> GetAllEquipments()
         {
             try
             {
-                return GetFloors("Select * from floors");
+                return GetEquipments("Select * from equipments");
             }
             catch (Exception)
             {
@@ -43,11 +48,11 @@ namespace WebApplication.Backend.Repositorys
             }
         }
 
-        public List<Floor> GetFloorsByName(string name)
+        public List<Equipment> GetEquipmentsByName(string name)
         {
             try
             {
-                return GetFloors("Select * from floors where Name like '%" + name + "%'");
+                return GetEquipments("Select * from equipments where Name like '%" + name + "%'");
             }
             catch (Exception)
             {

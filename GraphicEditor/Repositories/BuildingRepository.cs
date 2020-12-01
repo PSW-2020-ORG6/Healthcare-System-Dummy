@@ -1,41 +1,45 @@
-﻿using health_clinic_class_diagram.Backend.Model.Hospital;
+﻿using GraphicEditor.Repositories.Interfaces;
+using health_clinic_class_diagram.Backend.Model.Hospital;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 
-namespace WebApplication.Backend.Repositorys
+namespace GraphicEditor.Repositories
 {
-    public class FloorRepository : IFloorRepository
+    public class BuildingRepository : IBuildingRepository
     {
         private MySqlConnection connection;
-        public FloorRepository()
+        public BuildingRepository()
         {
             connection = new MySqlConnection("server=localhost;port=3306;database=mydb;user=root;password=root");
         }
 
-        private List<Floor> GetFloors(String query)
+        private List<Building> GetBuildings(String query)
         {
             connection.Open();
             MySqlCommand sqlCommand = new MySqlCommand(query, connection);
             MySqlDataReader sqlReader = sqlCommand.ExecuteReader();
-            List<Floor> resultList = new List<Floor>();
+            List<Building> resultList = new List<Building>();
             while (sqlReader.Read())
             {
-                Floor entity = new Floor();
+                Building entity = new Building();
                 entity.SerialNumber = (string)sqlReader[0];
                 entity.Name = (string)sqlReader[1];
-                entity.BuildingSerialNumber = (string)sqlReader[2];
+                entity.Color = (string)sqlReader[2];
+                entity.Row = (int)sqlReader[3];
+                entity.Column = (int)sqlReader[4];
+                entity.Style = (string)sqlReader[5];
                 resultList.Add(entity);
             }
             connection.Close();
             return resultList;
         }
 
-        public List<Floor> GetAllFloors()
+        public List<Building> GetAllBuildings()
         {
             try
             {
-                return GetFloors("Select * from floors");
+                return GetBuildings("Select * from buildings");
             }
             catch (Exception)
             {
@@ -43,11 +47,11 @@ namespace WebApplication.Backend.Repositorys
             }
         }
 
-        public List<Floor> GetFloorsByName(string name)
+        public List<Building> GetBuildingsByName(string name)
         {
             try
             {
-                return GetFloors("Select * from floors where Name like '%" + name + "%'");
+                return GetBuildings("Select * from buildings where Name like '%" + name + "%'");
             }
             catch (Exception)
             {

@@ -1,4 +1,6 @@
-﻿using Model.Accounts;
+﻿using GraphicEditor.HelpClasses;
+using GraphicEditor.ViewModel;
+using Model.Hospital;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +13,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfAppDummy
+namespace GraphicEditor.View.Windows
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for RoomUpdate.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class RoomUpdate : Window
     {
-        public MainWindow()
+        public RoomUpdate(Room room, DialogAnswerListener<Room> dialogAnswerListener)
         {
+            this.DataContext = new RoomUpdateViewModel(this, room, dialogAnswerListener);
             InitializeComponent();
-            Physitian p = new Physitian();
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using health_clinic_class_diagram.Backend.Model.Hospital;
+﻿using GraphicEditor.Repositories.Interfaces;
+using health_clinic_class_diagram.Backend.Model.Hospital;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 
-namespace WebApplication.Backend.Repositorys
+namespace GraphicEditor.Repositories
 {
     public class FloorRepository : IFloorRepository
     {

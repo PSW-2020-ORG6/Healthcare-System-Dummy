@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\project-generated-code-backend\HealthClinicBackend.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MaterialDesignThemes">
+			<Version>3.2.0</Version>
+		</PackageReference>
+		<PackageReference Include="MySql.Data">
+			<Version>8.0.22</Version>
+		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json">
+			<Version>12.0.3</Version>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Resources\Icons\help.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Resources\Icons\syringe.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="HtmlHelpPages\Error.html" />
+		<Content Include="HtmlHelpPages\MainWindow.html" />
+		<Resource Include="Resources\Icons\Plus-icon.png" />
+		<Resource Include="Resources\Icons\Hole.png" />
+		<Resource Include="Resources\Icons\octagon.png" />
+		<Resource Include="Resources\Icons\rectangle.png" />
+		<Resource Include="Resources\Icons\triangle.png" />
+		<Resource Include="Resources\Icons\uBuilding.png" />
+		<Resource Include="Resources\Icons\bed.png" />
+		<Resource Include="Resources\Images\MapPattern2-2.png" />
+		<Resource Include="Resources\Images\MapPattern2-1.png" />
+		<Resource Include="Resources\Images\MapPattern2.png" />
+		<Resource Include="Resources\Icons\plant.png" />
+		<Resource Include="Resources\Icons\table.png" />
+		<Resource Include="Resources\Icons\chair.png" />
+		<Resource Include="Resources\Icons\toilet.png" />
+		<Resource Include="Resources\Images\floor.jpg" />
+		<Resource Include="Resources\Images\mapPattern_withoutBuildings.png" />
+		<Resource Include="Resources\Images\parkDermatology.png" />
+		<Resource Include="Resources\Images\legendPattern.png" />
+		<Resource Include="Resources\Images\mapPattern.png" />
+		<Resource Include="Resources\Images\hospitalLogo.png" />
+		<Resource Include="Resources\Images\parkingLogo.png" />
+		<Resource Include="Resources\Icons\statusbarDecor.png" />
+		<Resource Include="Resources\Icons\helpBack.png" />
+		<Resource Include="Resources\Icons\helpForward.png" />
+	</ItemGroup>
+
+</Project>

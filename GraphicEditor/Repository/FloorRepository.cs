@@ -5,18 +5,18 @@ using System.Collections.Generic;
 
 namespace WebApplication.Backend.Repositorys
 {
-    public class FloorRepository : IFloorRepository
+    public class FloorRepository
     {
         private MySqlConnection connection;
         public FloorRepository()
         {
             connection = new MySqlConnection("server=localhost;port=3306;database=mydb;user=root;password=root");
+            connection.Open();
         }
 
-        private List<Floor> GetFloors(String query)
+        internal List<Floor> GetFloors(String sqlDml)
         {
-            connection.Open();
-            MySqlCommand sqlCommand = new MySqlCommand(query, connection);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlDml, connection);
             MySqlDataReader sqlReader = sqlCommand.ExecuteReader();
             List<Floor> resultList = new List<Floor>();
             while (sqlReader.Read())
@@ -33,26 +33,7 @@ namespace WebApplication.Backend.Repositorys
 
         public List<Floor> GetAllFloors()
         {
-            try
-            {
-                return GetFloors("Select * from floors");
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public List<Floor> GetFloorsByName(string name)
-        {
-            try
-            {
-                return GetFloors("Select * from floors where Name like '%" + name + "%'");
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return GetFloors("Select * from floors");
         }
     }
 }

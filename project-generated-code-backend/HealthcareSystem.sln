@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationAdapters", "..\I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationAdaptersTests", "..\IntegrationAdaptersTests\IntegrationAdaptersTests.csproj", "{6236CF73-AF2E-40A7-8B01-A25CA855FB47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfAppDummy", "..\WpfAppDummy\WpfAppDummy.csproj", "{E84838AB-01D4-4920-A017-A1CF0B87A84C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphicEditor", "..\GraphicEditor\GraphicEditor.csproj", "{E84838AB-01D4-4920-A017-A1CF0B87A84C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
