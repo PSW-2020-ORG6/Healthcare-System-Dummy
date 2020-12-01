@@ -4,4 +4,8 @@ USER nonrootuser
 WORKDIR /app
 COPY . .
 EXPOSE 80
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet WebApplication.dll
+EXPOSE 5000
+EXPOSE 5001
+EXPOSE 8080
+ENV ASPNETCORE_URLS="http://*:8080;http://*:5000;http://*:5001"
+ENTRYPOINT ["dotnet", "WebApplication.dll"]
