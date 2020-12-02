@@ -8,6 +8,8 @@ namespace WebApplication.Backend.Repositorys
     public class BuildingRepository : IBuildingRepository
     {
         private MySqlConnection connection;
+        private FloorRepository floorRepository = new FloorRepository();
+
         public BuildingRepository()
         {
             connection = new MySqlConnection("server=localhost;port=3306;database=mydb;user=root;password=root");
@@ -15,6 +17,7 @@ namespace WebApplication.Backend.Repositorys
 
         private List<Building> GetBuildings(String query)
         {
+            connection.Close();
             connection.Open();
             MySqlCommand sqlCommand = new MySqlCommand(query, connection);
             MySqlDataReader sqlReader = sqlCommand.ExecuteReader();
@@ -25,7 +28,10 @@ namespace WebApplication.Backend.Repositorys
                 entity.SerialNumber = (string)sqlReader[0];
                 entity.Name = (string)sqlReader[1];
                 entity.Color = (string)sqlReader[2];
-                entity.Shape = (string)sqlReader[3];
+                entity.Row = (int)sqlReader[3];
+                entity.Column = (int)sqlReader[4];
+                entity.Style = (string)sqlReader[5];
+                entity.Floors = floorRepository.GetFloorsByBuildingSerialNumber((string)sqlReader[0]);
                 resultList.Add(entity);
             }
             connection.Close();
@@ -52,6 +58,19 @@ namespace WebApplication.Backend.Repositorys
             }
             catch (Exception)
             {
+                return null;
+            }
+        }
+
+        public Building GetBuildingBySerialNumber(string serialNumber)
+        {
+            try
+            {
+                return GetBuildings("Select * from buildings where SerialNumber='" + serialNumber + "'")[0];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
                 return null;
             }
         }

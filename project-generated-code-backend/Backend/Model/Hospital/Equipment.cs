@@ -16,10 +16,7 @@ namespace Model.Hospital
         private String id;
         private String roomId;
 
-        public Equipment()
-        {
-        }
-
+        public Equipment() : base(Guid.NewGuid().ToString()) { }
         public Equipment(string name, string id) : base(Guid.NewGuid().ToString())
         {
             this.name = name;
@@ -34,14 +31,6 @@ namespace Model.Hospital
             this.id = id;
         }
 
-        [JsonConstructor]
-        public Equipment(String serialNumber, string name, string id, string roomId) : base()
-        {
-            this.SerialNumber = serialNumber;
-            this.name = name;
-            this.id = id;
-            this.roomId = roomId;
-        }
 
         public Equipment(Equipment equipment) : base(equipment.SerialNumber)
         {
@@ -53,6 +42,9 @@ namespace Model.Hospital
         public string Id { get => id; set { id = value; } }
 
         public string RoomId { get => roomId; set => roomId = value; }
+        public string BuildingSerialNumber { get; set; }
+        public string FloorSerialNumber { get; set; }
+        public string RoomSerialNumber { get; set; }
 
         public override bool Equals(object obj)
         {

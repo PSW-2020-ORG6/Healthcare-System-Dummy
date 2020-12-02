@@ -8,14 +8,18 @@ namespace WebApplication.Backend.Repositorys
     public class MedicineRepository
     {
         private MySqlConnection connection;
+        private MedicineManufacturerRepository medicineManufacturer = new MedicineManufacturerRepository();
+        private MedicineTypeRepository medicineType = new MedicineTypeRepository();
+
         public MedicineRepository()
         {
             connection = new MySqlConnection("server=localhost;port=3306;database=mydb;user=root;password=root");
-            connection.Open();
         }
 
-        private List<Medicine> GetMedicine(String query)
+        private List<Medicine> GetMedicines(String query)
         {
+            connection.Close();
+            connection.Open();
             MySqlCommand sqlCommand = new MySqlCommand(query, connection);
             MySqlDataReader sqlReader = sqlCommand.ExecuteReader();
             List<Medicine> resultList = new List<Medicine>();
@@ -25,19 +29,34 @@ namespace WebApplication.Backend.Repositorys
                 entity.SerialNumber = (string)sqlReader[0];
                 entity.CopyrightName = (string)sqlReader[1];
                 entity.GenericName = (string)sqlReader[2];
-                entity.MedicineManufacturer.Name = (string)sqlReader[3];
-                entity.MedicineType.Type = (string)sqlReader[4];
+                entity.MedicineManufacturer = medicineManufacturer.GetMedicineManufacturerBySerialNumber((string)sqlReader[3]);
+                entity.MedicineType = medicineType.GetMedicineTypeBySerialNumber((string)sqlReader[4]);
+                entity.MedicineManufacturerSerialNumber = (string)sqlReader[3];
+                entity.MedicineTypeSerialNumber = (string)sqlReader[4];
                 resultList.Add(entity);
             }
             connection.Close();
             return resultList;
         }
 
-        public List<Medicine> GetAllMedicine()
+        public List<Medicine> GetMedicinesByName(string name)
         {
             try
             {
-                return GetMedicine("Select * from medicine");
+                return GetMedicines("Select * from medicine where GenericName like '%" + name + "%'");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public List<Medicine> GetAllMedicines()
+        {
+            try
+            {
+                return GetMedicines("Select * from medicine");
             }
             catch (Exception)
             {

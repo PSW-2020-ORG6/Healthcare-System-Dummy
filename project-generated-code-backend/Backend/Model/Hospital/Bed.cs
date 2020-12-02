@@ -10,6 +10,8 @@ namespace Model.Hospital
 {
     public class Bed : Equipment
     {
+        public string PatientID { get; set; }
+
         public Bed()
         {
         }

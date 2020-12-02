@@ -19,11 +19,13 @@ namespace Model.Accounts
         {
             this.specialization = new List<Specialization>();
         }
-
-        public Physitian()
+        public Physitian() { }
+        public Physitian(string name, string surname, string id)
+            : base(Guid.NewGuid().ToString(), name, surname, id)
         {
 
         }
+
 
         [JsonConstructor]
         public Physitian(String serialNumber, string name, string surname, string id, DateTime dateOfBirth, string contact, string email, Address address, TimeInterval workSchedule, string password, List<Specialization> specialization = null)
@@ -40,13 +42,18 @@ namespace Model.Accounts
             }
         }
 
-        public List<Specialization> Specialization
+        public virtual List<Specialization> Specialization
         {
             get
             {
                 if (specialization == null)
                     specialization = new List<Specialization>();
                 return specialization;
+            }
+            set
+            {
+                if (specialization == null)
+                    specialization = new List<Specialization>();
             }
         }
 
@@ -82,9 +89,9 @@ namespace Model.Accounts
 
 
         private TimeInterval workSchedule;
-        private System.Collections.Generic.List<TimeInterval> vacationTime;
+        private List<TimeInterval> vacationTime;
 
-        public System.Collections.Generic.List<TimeInterval> VacationTime
+        public virtual List<TimeInterval> VacationTime
         {
             get
             {
@@ -127,7 +134,7 @@ namespace Model.Accounts
             if (vacationTime != null)
                 vacationTime.Clear();
         }
-        public TimeInterval WorkSchedule { get => workSchedule; set => workSchedule = value; }
+        public virtual TimeInterval WorkSchedule { get => workSchedule; set => workSchedule = value; }
 
         public String AllSpecializations
         {
@@ -139,6 +146,11 @@ namespace Model.Accounts
                     specializations += s.ToString() + ", ";
                 }
                 return specializations;
+            }
+            set
+            {
+                if (specialization == null)
+                    AllSpecializations = " ";
             }
         }
 

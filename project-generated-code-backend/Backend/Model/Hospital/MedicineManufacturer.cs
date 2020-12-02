@@ -13,8 +13,9 @@ namespace Model.Hospital
     {
         private String name;
 
-        public string Name { get => name; set => name = value; }
+        public virtual string Name { get => name; set => name = value; }
 
+        public MedicineManufacturer() : base(Guid.NewGuid().ToString()) { }
         public MedicineManufacturer(string name) : base(Guid.NewGuid().ToString())
         {
             this.name = name;
@@ -26,9 +27,6 @@ namespace Model.Hospital
             this.name = name;
         }
 
-        public MedicineManufacturer()
-        {
-        }
 
         public override bool Equals(object obj)
         {

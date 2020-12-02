@@ -16,14 +16,16 @@ namespace Model.MedicalExam
     {
         private DateTime date;
         private String findings;
-        private Patient patient;
-        private Physitian physitian;
+        public Patient patient;
+        public Physitian physitian;
         private String patientConditions;
         private ProcedureType procedureType;
-
+        public String patientName;
+        public String physitianName;
+        public string patientId;
         private List<AdditionalDocument> additionalDocument;
 
-        public List<AdditionalDocument> AdditionalDocument
+        public virtual List<AdditionalDocument> AdditionalDocument
         {
             get
             {
@@ -42,12 +44,12 @@ namespace Model.MedicalExam
             }
         }
 
-        public DateTime Date { get => date; }
+        public DateTime Date { get => date; set => date = value; }
         public string Findings { get => findings; set => findings = value; }
-        public Patient Patient { get => patient; }
-        public Physitian Physitian { get => physitian; }
+        public virtual Patient Patient { get => patient; set => patient = value; }
+        public virtual Physitian Physitian { get => physitian; set => physitian = value; }
         public string PatientConditions { get => patientConditions; set => patientConditions = value; }
-        public ProcedureType ProcedureType { get => procedureType; }
+        public virtual ProcedureType ProcedureType { get => procedureType; set => procedureType = value; }
 
         public void AddAdditionalDocument(AdditionalDocument newAdditionalDocument)
         {
@@ -82,6 +84,13 @@ namespace Model.MedicalExam
             this.physitian = physitian;
             this.patientConditions = patientConditions;
         }
+        public Report() { }
+        public Report(String patient, String physitian, String patientId)
+        {
+            this.patientName = patient;
+            this.physitianName = physitian;
+            this.patientId = patientId;
+        }
 
         [JsonConstructor]
         public Report(String serialNumber, DateTime date, string findings, Patient patient, Physitian physitian, string patientConditions) : base(serialNumber)
@@ -114,6 +123,7 @@ namespace Model.MedicalExam
             return this.Date.Equals(other.Date) && this.Findings.Equals(other.Findings);
         }
 
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -128,6 +138,7 @@ namespace Model.MedicalExam
             }
             return ret;
         }
+
         public int CompareTo(Report other)
         {
             return this.Date.CompareTo(other.Date);

@@ -11,11 +11,12 @@ namespace WebApplication.Backend.Repositorys
         public MedicineManufacturerRepository()
         {
             connection = new MySqlConnection("server=localhost;port=3306;database=mydb;user=root;password=root");
-            connection.Open();
         }
 
         private List<MedicineManufacturer> GetMedicineManufacturers(String query)
         {
+            connection.Close();
+            connection.Open();
             MySqlCommand sqlCommand = new MySqlCommand(query, connection);
             MySqlDataReader sqlReader = sqlCommand.ExecuteReader();
             List<MedicineManufacturer> resultList = new List<MedicineManufacturer>();
@@ -38,6 +39,19 @@ namespace WebApplication.Backend.Repositorys
             }
             catch (Exception)
             {
+                return null;
+            }
+        }
+
+        public MedicineManufacturer GetMedicineManufacturerBySerialNumber(string serialNumber)
+        {
+            try
+            {
+                return GetMedicineManufacturers("Select * from medicineManufacturers where SerialNumber='" + serialNumber + "'")[0];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
                 return null;
             }
         }

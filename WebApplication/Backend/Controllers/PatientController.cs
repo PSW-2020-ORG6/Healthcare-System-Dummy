@@ -17,7 +17,6 @@ namespace WebApplication.Backend.Controllers
         {
             this.patientService = new PatientService();
         }
-
         ///Tanja Drcelic RA124/2017
         /// <summary>
         ///calls method for get all patients from patients table
@@ -30,5 +29,19 @@ namespace WebApplication.Backend.Controllers
         {
             return patientService.GetAllPatients();
         }
+
+        ///Aleksa Repović RA52/2017
+        /// <summary>
+        ///Get patient from patients table by ID
+        ///</summary>
+        ///<returns>
+        ///single instance of Patient object
+        ///</returns
+        [HttpGet("getPatientById")]
+        public Patient GetPatientById(string patientId)
+        {
+            return patientService.GetPatientById(patientId);
+        }
+
     }
 }

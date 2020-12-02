@@ -1,5 +1,5 @@
 ﻿using GraphicEditor.Repositories.Interfaces;
-using health_clinic_class_diagram.Backend.Model.Hospital;
+using Model.Hospital;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -9,31 +9,44 @@ namespace GraphicEditor.Repositories
     public class RoomRepository : IRoomRepository
     {
         private MySqlConnection connection;
+        private EquipmentRepository equipmentRepository = new EquipmentRepository();
+        private RoomTypeRepository roomTypeRepository = new RoomTypeRepository();
+
         public RoomRepository()
         {
             connection = new MySqlConnection("server=localhost;port=3306;database=mydb;user=root;password=root");
         }
 
-        private List<RoomGEA> GetRooms(String query)
+        private List<Room> GetRooms(String query)
         {
+            connection.Close();
             connection.Open();
             MySqlCommand sqlCommand = new MySqlCommand(query, connection);
             MySqlDataReader sqlReader = sqlCommand.ExecuteReader();
-            List<RoomGEA> resultList = new List<RoomGEA>();
+            List<Room> resultList = new List<Room>();
             while (sqlReader.Read())
             {
-                RoomGEA entity = new RoomGEA();
+                Room entity = new Room();
                 entity.SerialNumber = (string)sqlReader[0];
                 entity.Name = (string)sqlReader[1];
-                entity.FloorName = (string)sqlReader[2];
-                entity.BuildingName = (string)sqlReader[3];
+                entity.Id = (int)sqlReader[2];
+                entity.FloorSerialNumber = (string)sqlReader[3];
+                entity.BuildingSerialNumber = (string)sqlReader[4];
+                entity.RoomTypeSerialNumber = (string)sqlReader[5];
+                entity.RoomType = roomTypeRepository.GetRoomTypeBySerialNumber((string)sqlReader[5]);
+                entity.Equipment = equipmentRepository.GetEquipmentsByRoomSerialNumber((string)sqlReader[0]);
+                entity.Row = (int)sqlReader[6];
+                entity.Column = (int)sqlReader[7];
+                entity.RowSpan = (int)sqlReader[8];
+                entity.ColumnSpan = (int)sqlReader[9];
+                entity.Style = (string)sqlReader[10];
                 resultList.Add(entity);
             }
             connection.Close();
             return resultList;
         }
 
-        public List<RoomGEA> GetAllRooms()
+        public List<Room> GetAllRooms()
         {
             try
             {
@@ -45,7 +58,7 @@ namespace GraphicEditor.Repositories
             }
         }
 
-        public List<RoomGEA> GetRoomsByName(string name)
+        public List<Room> GetRoomsByName(string name)
         {
             try
             {
@@ -57,11 +70,24 @@ namespace GraphicEditor.Repositories
             }
         }
 
-        public List<RoomGEA> GetRoomsBySerialNumber(string serialNumber)
+        public Room GetRoomBySerialNumber(string serialNumber)
         {
             try
             {
-                return GetRooms("Select * from rooms where SerialNumber like '%" + serialNumber + "%'");
+                return GetRooms("Select * from rooms where SerialNumber='" + serialNumber + "'")[0];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        public List<Room> GetRoomsByFloorSerialNumber(string floorSerialNumber)
+        {
+            try
+            {
+                return GetRooms("Select * from rooms where FloorSerialNumber='" + floorSerialNumber + "'");
             }
             catch (Exception e)
             {

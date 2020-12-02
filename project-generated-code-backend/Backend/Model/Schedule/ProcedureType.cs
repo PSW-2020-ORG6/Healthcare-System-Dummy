@@ -20,6 +20,9 @@ namespace Model.Schedule
         private int estimatedTimeInMinutes;
         private List<Equipment> requiredEquipment;
 
+        public virtual Specialization Specialization { get => specialization; set => specialization = value; }
+        public string Name { get => name; set => name = value; }
+        public int EstimatedTimeInMinutes { get => estimatedTimeInMinutes; set => estimatedTimeInMinutes = value; }
         public List<Equipment> RequiredEquipment
         {
             get
@@ -38,10 +41,6 @@ namespace Model.Schedule
                 }
             }
         }
-
-        public Specialization Specialization { get => specialization; }
-        public string Name { get => name; }
-        public int EstimatedTimeInMinutes { get => estimatedTimeInMinutes; }
 
         public void AddRequiredEquipment(Equipment newEquipment)
         {
@@ -94,6 +93,7 @@ namespace Model.Schedule
             return base.GetHashCode();
         }
 
+        public ProcedureType() : base(Guid.NewGuid().ToString()) { }
         public ProcedureType(string name, int estimatedTimeInMinutes, Specialization specialization) : base(Guid.NewGuid().ToString())
         {
             this.name = name;
