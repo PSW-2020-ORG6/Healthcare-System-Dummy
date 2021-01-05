@@ -3,36 +3,49 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class Comment
 
-using Backend.Model.Util;
-using health_clinic_class_diagram.Backend.Dto;
 using System;
+using HealthClinicBackend.Backend.Dto;
+using HealthClinicBackend.Backend.Model.Util;
 
-namespace Model.Blog
+namespace HealthClinicBackend.Backend.Model.Blog
 {
     public class Feedback : Entity
     {
-        private String text;
-        private DateTime date;
-        private String patientId;
-        private Boolean approved;
-        public string PatientId { get => patientId; set => patientId = value; }
-        public string Text { get => text; set => text = value; }
-        public DateTime Date { get => date; set => date = value; }
-        public Boolean Approved { get => approved; set => approved = value; }
-        public Feedback(String text, String patientId, DateTime date, Boolean app)
+        public string PatientId { get; set; }
+
+        public string Text { get; set; }
+
+        public DateTime Date { get; set; }
+
+        public bool Approved { get; set; }
+
+        public Feedback() : base()
         {
-            this.PatientId = patientId;
-            this.Text = text;
-            this.Date = date;
-            this.Approved = app;
         }
-        public Feedback() { }
-        public Feedback(FeedbackDTO feedbackDTO)
+
+        public Feedback(string text, string patientId, DateTime date, bool approved) : base()
         {
-            this.text = feedbackDTO.Text;
-            this.patientId = feedbackDTO.PatientId;
-            this.date = feedbackDTO.Date;
-            this.Approved = feedbackDTO.Approved;
+            PatientId = patientId;
+            Text = text;
+            Date = date;
+            Approved = approved;
+        }
+
+        public Feedback(string serialNumber, string text, string patientId, DateTime date, bool approved) : base(
+            serialNumber)
+        {
+            PatientId = patientId;
+            Text = text;
+            Date = date;
+            Approved = approved;
+        }
+
+        public Feedback(FeedbackDto feedbackDto) : base()
+        {
+            Text = feedbackDto.Text;
+            PatientId = feedbackDto.PatientId;
+            Date = feedbackDto.Date;
+            Approved = feedbackDto.Approved;
         }
     }
 }

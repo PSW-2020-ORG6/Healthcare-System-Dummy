@@ -3,94 +3,77 @@
 // Created: Sunday, June 7, 2020 4:19:02 PM
 // Purpose: Definition of Class InpatientCareService
 
-using Backend.Dto;
-using Backend.Repository;
-using Backend.Service.SchedulingService.AppointmentGeneralitiesOptions;
-using HealthClinic.Backend.Model.Hospital;
-using Model.Accounts;
-using Model.Hospital;
-using Model.MedicalExam;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using HealthClinicBackend.Backend.Dto;
+using HealthClinicBackend.Backend.Model.Accounts;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Model.MedicalExam;
+using HealthClinicBackend.Backend.Repository.Generic;
+using HealthClinicBackend.Backend.Service.SchedulingService.AppointmentGeneralitiesOptions;
 
-namespace Backend.Service.PatientCareService
+namespace HealthClinicBackend.Backend.Service.PatientCareService
 {
     public class InpatientCareService
     {
-        private Physitian loggedPhysitian;
-        private RoomBedTypeRepository roomBedTypeRepository;
-        private InpatientCareRepository inpatientCareRepository;
-        private BedReservationRepository bedReservationRepository;
-        private RoomRepository roomRepository;
+        private readonly Physician _loggedPhysician;
+        private readonly IInpatientCareRepository _inpatientCareRepository;
+        private readonly IBedReservationRepository _bedReservationRepository;
+        private readonly IRoomRepository _roomRepository;
+        private readonly RoomAvailabilityService _roomAvailabilityService;
 
-        public InpatientCareService(Physitian loggedPhysitian)
+        public InpatientCareService(Physician loggedPhysician, IInpatientCareRepository inpatientCareRepository,
+            IBedReservationRepository bedReservationRepository, IRoomRepository roomRepository,
+            IAppointmentRepository appointmentRepository, IRenovationRepository renovationRepository)
         {
-            this.loggedPhysitian = loggedPhysitian;
-            this.roomBedTypeRepository = new RoomBedTypeFileSystem();
-            this.inpatientCareRepository = new InpatientCareFileSystem();
-            this.bedReservationRepository = new BedReservationFileSystem();
-            this.roomRepository = new RoomFileSystem();
+            _loggedPhysician = loggedPhysician;
+            _inpatientCareRepository = inpatientCareRepository;
+            _bedReservationRepository = bedReservationRepository;
+            _roomRepository = roomRepository;
+            _roomAvailabilityService =
+                new RoomAvailabilityService(appointmentRepository, renovationRepository, bedReservationRepository);
         }
 
         public List<Room> GetAvailableRooms()
         {
-            RoomAvailabilityService roomAvailabilityService = new RoomAvailabilityService();
-            List<Room> rooms = new List<Room>();
-            foreach (Room room in GetAllRooms())
-            {
-                if (roomAvailabilityService.IsRoomAvailableForInpatientCare(room))
-                {
-                    rooms.Add(room);
-                }
-            }
-            Console.WriteLine("GET AVAILABLE ROOMS");
-            foreach (Room r in rooms)
-            {
-                Console.WriteLine(r);
-            }
-            return rooms;
+            return GetAllRooms().Where(room => _roomAvailabilityService.IsRoomAvailableForInpatientCare(room)).ToList();
         }
 
         public List<Bed> GetAvailableBeds(Room room)
         {
-            RoomAvailabilityService roomAvailabilityService = new RoomAvailabilityService();
-            return roomAvailabilityService.GetAvailableBeds(room);
+            return _roomAvailabilityService.GetAvailableBeds(room);
         }
 
-        public void StartInpatientCare(BedReservationDTO bedReservationDTO)
+        public void StartInpatientCare(BedReservationDto bedReservationDto)
         {
-            bedReservationRepository.Save(new BedReservation(bedReservationDTO));
+            _bedReservationRepository.Save(new BedReservation(bedReservationDto));
         }
 
-        public void DischargeParient(Patient patient)
+        public void DischargePatient(Patient patient)
         {
-            BedReservation activeBedReservation = bedReservationRepository.GetBedReservationByPatient(patient);
-            bedReservationRepository.Delete(activeBedReservation.SerialNumber);
-            DateTime dateOfAdmition = activeBedReservation.TimeInterval.Start;
+            BedReservation activeBedReservation = _bedReservationRepository.GetBedReservationByPatient(patient);
+            _bedReservationRepository.Delete(activeBedReservation.SerialNumber);
+            DateTime dateOfAdmission = activeBedReservation.TimeInterval.Start;
             DateTime dateOfDischarge = DateTime.Now;
-            InpatientCare inpatientCare = new InpatientCare(dateOfAdmition, dateOfDischarge, loggedPhysitian, patient);
-            inpatientCareRepository.Save(inpatientCare);
+            InpatientCare inpatientCare =
+                new InpatientCare(dateOfAdmission, dateOfDischarge, _loggedPhysician, patient);
+            _inpatientCareRepository.Save(inpatientCare);
         }
 
         public BedReservation GetActiveBedReservation(Patient patient)
         {
-            return bedReservationRepository.GetBedReservationByPatient(patient);
+            return _bedReservationRepository.GetBedReservationByPatient(patient);
         }
+
         public List<InpatientCare> GetAllInpatientCares(Patient patient)
         {
-            return inpatientCareRepository.GetInpatientCaresForPatient(patient);
+            return _inpatientCareRepository.GetInpatientCaresForPatient(patient);
         }
 
         private List<Room> GetAllRooms()
         {
-            List<RoomBedType> roomsContainingBedTypes = roomBedTypeRepository.GetAll();
-            List<Room> rooms = new List<Room>();
-            foreach (RoomBedType roomType in roomsContainingBedTypes)
-            {
-                rooms.AddRange(roomRepository.GetRoomsByRoomType(roomType));
-            }
-            return rooms;
+            return _roomRepository.GetAll();
         }
-
     }
 }

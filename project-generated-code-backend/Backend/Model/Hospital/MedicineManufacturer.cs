@@ -3,47 +3,44 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class MedicineManufacturer
 
-using Backend.Model.Util;
-using Newtonsoft.Json;
 using System;
+using HealthClinicBackend.Backend.Model.Util;
+using Newtonsoft.Json;
 
-namespace Model.Hospital
+namespace HealthClinicBackend.Backend.Model.Hospital
 {
     public class MedicineManufacturer : Entity
     {
-        private String name;
+        public virtual string Name { get; set; }
 
-        public virtual string Name { get => name; set => name = value; }
-
-        public MedicineManufacturer() : base(Guid.NewGuid().ToString()) { }
-        public MedicineManufacturer(string name) : base(Guid.NewGuid().ToString())
+        public MedicineManufacturer() : base()
         {
-            this.name = name;
+        }
+
+        public MedicineManufacturer(string name) : base()
+        {
+            Name = name;
         }
 
         [JsonConstructor]
         public MedicineManufacturer(String serialNumber, string name) : base(serialNumber)
         {
-            this.name = name;
+            Name = name;
         }
-
 
         public override bool Equals(object obj)
         {
-            MedicineManufacturer other = obj as MedicineManufacturer;
-            if (other == null)
-            {
-                return false;
-            }
-            return this.Name.Equals(other.Name);
+            return obj is MedicineManufacturer other && Name.Equals(other.Name);
         }
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
     }
 }

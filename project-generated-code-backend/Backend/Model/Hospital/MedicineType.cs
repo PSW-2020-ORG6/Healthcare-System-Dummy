@@ -3,47 +3,44 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class MedicineType
 
-using Backend.Model.Util;
-using Newtonsoft.Json;
 using System;
+using HealthClinicBackend.Backend.Model.Util;
+using Newtonsoft.Json;
 
-namespace Model.Hospital
+namespace HealthClinicBackend.Backend.Model.Hospital
 {
     public class MedicineType : Entity
     {
-        private String type;
+        public string Type { get; set; }
 
-        public string Type { get => type; set => type = value; }
-        public MedicineType() : base(Guid.NewGuid().ToString())
+        public MedicineType() : base()
         {
         }
-        public MedicineType(string type) : base(Guid.NewGuid().ToString())
+
+        public MedicineType(string type) : base()
         {
-            this.type = type;
+            Type = type;
         }
 
         [JsonConstructor]
         public MedicineType(String serialNumber, string type) : base(serialNumber)
         {
-            this.type = type;
+            Type = type;
         }
 
         public override bool Equals(object obj)
         {
-            MedicineType other = obj as MedicineType;
-            if (other == null)
-            {
-                return false;
-            }
-            return this.Type.Equals(other.Type);
+            return obj is MedicineType other && Type.Equals(other.Type);
         }
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
         public override string ToString()
         {
-            return this.Type;
+            return Type;
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using MailKit.Net.Smtp;
+﻿using HealthClinicBackend.Backend.Model.Accounts;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using Model.Accounts;
 using WebApplication.Backend.Model;
 
 namespace WebApplication.Backend.Services
@@ -18,7 +18,6 @@ namespace WebApplication.Backend.Services
             _mailSettings = mailSettings.Value;
         }
 
-        ///Aleksandra Milijevic RA 22/2017
         /// <summary>
         ///email sending
         ///</summary>
@@ -42,7 +41,6 @@ namespace WebApplication.Backend.Services
             smtp.Disconnect(true);
         }
 
-        ///Aleksandra Milijevic RA 22/2017
         /// <summary>
         ///id encryption to send email 
         ///</summary>
@@ -56,6 +54,5 @@ namespace WebApplication.Backend.Services
             long id = long.Parse(patientId) - 6789 + 23 * 33;
             return id.ToString();
         }
-
     }
 }

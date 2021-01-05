@@ -1,6 +1,7 @@
-﻿using Backend.Dto;
+﻿using HealthClinicBackend.Backend.Dto;
 using Microsoft.AspNetCore.Mvc;
-using Model.Accounts;
+using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.Accounts;
 using WebApplication.Backend.Services;
 
 namespace WebApplication.Backend.Controllers
@@ -9,13 +10,13 @@ namespace WebApplication.Backend.Controllers
     [ApiController]
     public class RegistrationController : ControllerBase
     {
-        public RegistrationService registrationService;
-        private IMailService mailService;
+        private readonly RegistrationService _registrationService;
+        private readonly IMailService _mailService;
 
-        public RegistrationController(IMailService mailService)
+        public RegistrationController(RegistrationService registrationService, IMailService mailService)
         {
-            registrationService = new RegistrationService();
-            this.mailService = mailService;
+            _registrationService = registrationService;
+            _mailService = mailService;
         }
 
         ///Aleksandra Milijevic RA 22/2017
@@ -26,11 +27,11 @@ namespace WebApplication.Backend.Controllers
         ///information about sucess in string format
         ///</returns>
         [HttpPost("registerPatient")]
-        public IActionResult RegisterPatient(PatientDTO patientDTO)
+        public IActionResult RegisterPatient(PatientDto patientDTO)
         {
             if (patientDTO.AreRegistrationFieldsValid())
             {
-                if (registrationService.RegisterPatient(new Patient(patientDTO)))
+                if (_registrationService.RegisterPatient(new Patient(patientDTO)))
                 {
                     SendMail(new Patient(patientDTO));
                     return Ok();
@@ -48,7 +49,7 @@ namespace WebApplication.Backend.Controllers
 
         public void SendMail(Patient patient)
         {
-            mailService.SendEmail(patient);
+            _mailService.SendEmail(patient);
         }
 
         ///Aleksandra Milijevic RA 22/2017
@@ -63,7 +64,7 @@ namespace WebApplication.Backend.Controllers
         {
             string patientId = IdDecryption(id);
 
-            if (registrationService.ConfirmEmailUpdate(patientId))
+            if (_registrationService.ConfirmEmailUpdate(patientId))
             {
                 return Ok();
             }
@@ -86,6 +87,12 @@ namespace WebApplication.Backend.Controllers
         {
             long id = (long.Parse(patientId) - 23 * 33) + 6789;
             return id.ToString();
+        }
+
+        [HttpGet("allPhysitians")]
+        public List<FamilyDoctorDto> GetAllFeedbacks()
+        {
+            return _registrationService.GetAllPhysicians();
         }
     }
 }

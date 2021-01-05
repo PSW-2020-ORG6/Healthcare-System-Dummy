@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HealthClinicBackend.Backend.Model.PharmacySupport;
 using IntegrationAdapters.Adapters;
 using IntegrationAdapters.Controllers;
+using IntegrationAdapters.gRPCProtocol;
 using IntegrationAdapters.Models;
 using IntegrationAdapters.Services;
 using Microsoft.AspNetCore.Hosting;
@@ -17,7 +19,7 @@ namespace IntegrationAdapters
     public class Program
     {
         public static List<ActionAndBenefitMessage> Messages = new List<ActionAndBenefitMessage>();
-
+        public static string ResponseMessageGrpc;
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -29,6 +31,7 @@ namespace IntegrationAdapters
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<RabbitMQService>();
+                    services.AddHostedService<ClientScheduleService>();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

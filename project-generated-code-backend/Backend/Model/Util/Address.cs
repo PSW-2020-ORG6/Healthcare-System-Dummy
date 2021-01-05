@@ -3,46 +3,46 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class Address
 
-using Backend.Model.Util;
+using System.ComponentModel.DataAnnotations.Schema;
+using HealthClinicBackend.Backend.Dto;
 using Newtonsoft.Json;
-using System;
 
-namespace Model.Util
+namespace HealthClinicBackend.Backend.Model.Util
 {
     public class Address : Entity
     {
-
-        private String street;
-
-        public string Street { get => street; set => street = value; }
+        public string Street { get; set; }
+        [ForeignKey("City")] public string CitySerialNumber { get; set; }
+        public City City { get; set; }
 
         public Address() : base()
         {
         }
-        public Address(string street) : base(Guid.NewGuid().ToString())
+
+        public Address(string street) : base()
         {
-            this.street = street;
+            Street = street;
         }
 
         [JsonConstructor]
-        public Address(String serialNumber, string street) : base(serialNumber)
+        public Address(string serialNumber, string street) : base(serialNumber)
         {
-            this.street = street;
+            Street = street;
+        }
+
+        public Address(AddressDto addressDto)
+        {
+            Street = addressDto.Street;
         }
 
         public override string ToString()
         {
-            return street;
+            return Street;
         }
 
         public override bool Equals(object obj)
         {
-            Address other = obj as Address;
-            if (other == null)
-            {
-                return false;
-            }
-            return this.Street.Equals(other.Street);
+            return obj is Address other && Street.Equals(other.Street);
         }
 
         public override int GetHashCode()

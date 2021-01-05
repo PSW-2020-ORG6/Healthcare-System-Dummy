@@ -1,51 +1,53 @@
-﻿using Backend.Repository;
-using Model.Accounts;
-using Model.Schedule;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.Accounts;
+using HealthClinicBackend.Backend.Model.Schedule;
+using HealthClinicBackend.Backend.Repository.Generic;
 
-namespace health_clinic_class_diagram.Backend.Service.HospitalAccountsService
+namespace HealthClinicBackend.Backend.Service.HospitalAccountsService
 {
     public class PatientAccountsService
     {
-        private PatientRepository patientRepository;
-        private AppointmentRepository appointmentRepository;
-        private ReportRepository reportRepository;
+        private readonly IPatientRepository _patientRepository;
+        private readonly IAppointmentRepository _appointmentRepository;
 
-        public PatientAccountsService()
+        public PatientAccountsService(IPatientRepository patientRepository,
+            IAppointmentRepository appointmentRepository)
         {
-            this.patientRepository = new PatientFileSystem();
-            this.appointmentRepository = new AppointmentFileSystem();
-            this.reportRepository = new ReportFileSystem();
+            _patientRepository = patientRepository;
+            _appointmentRepository = appointmentRepository;
         }
 
-        public List<Patient> getAllPatients()
+        public List<Patient> GetAllPatients()
         {
-            return patientRepository.GetAll();
+            return _patientRepository.GetAll();
         }
-        public List<Patient> getPatientsForPhysitian(Physitian physitian)
+
+        public List<Patient> GetPatientsForPhysician(Physician physician)
         {
-            List<Patient> allPatients = patientRepository.GetAll();
+            List<Patient> allPatients = _patientRepository.GetAll();
             List<Patient> patients = new List<Patient>();
             foreach (Patient patient in allPatients)
             {
-                if (IsPatientScheduledForPhysitian(patient, physitian))
+                if (IsPatientScheduledForPhysician(patient, physician))
                 {
                     patients.Add(patient);
                 }
             }
+
             return patients;
         }
 
-        private bool IsPatientScheduledForPhysitian(Patient patient, Physitian physitian)
+        private bool IsPatientScheduledForPhysician(Patient patient, Physician physician)
         {
-            List<Appointment> patientAppointments = appointmentRepository.GetAppointmentsByPatient(patient);
+            List<Appointment> patientAppointments = _appointmentRepository.GetAppointmentsByPatient(patient);
             foreach (Appointment appointment in patientAppointments)
             {
-                if (appointment.Physitian.Equals(physitian))
+                if (appointment.Physician.Equals(physician))
                 {
                     return true;
                 }
             }
+
             return false;
         }
     }

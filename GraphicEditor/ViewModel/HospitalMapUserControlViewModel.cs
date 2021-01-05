@@ -1,12 +1,13 @@
 ﻿using GraphicEditor.HelpClasses;
-using GraphicEditor.Repositories;
 using GraphicEditor.View.Windows;
-using health_clinic_class_diagram.Backend.Model.Hospital;
-using health_clinic_class_diagram.Backend.Model.Util;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Model.Util;
+using HealthClinicBackend.Backend.Repository.DatabaseSql;
+using HealthClinicBackend.Backend.Repository.Generic;
 
 namespace GraphicEditor.ViewModel
 {
@@ -20,7 +21,7 @@ namespace GraphicEditor.ViewModel
 
         public Grid HospitalMapGrid { get; set; }
 
-        BuildingRepository buildingRepository = new BuildingRepository();
+        IBuildingRepository buildingRepository = new BuildingDatabaseSql();
 
         public HospitalMapUserControlViewModel(MapContentUserControlViewModel parent)
         {
@@ -34,13 +35,14 @@ namespace GraphicEditor.ViewModel
         /// </summary>
         public void InitialGridRender()
         {
-            ResourceDictionary.Source = new Uri("/GraphicEditor;component/Resources/Styles/ButtonStyles.xaml", UriKind.RelativeOrAbsolute);
-            foreach (Building building in buildingRepository.GetAllBuildings())
+            ResourceDictionary.Source = new Uri("/GraphicEditor;component/Resources/Styles/ButtonStyles.xaml",
+                UriKind.RelativeOrAbsolute);
+            foreach (Building building in buildingRepository.GetAll())
             {
                 Button but = new Button();
-                but.Style = (Style)ResourceDictionary[building.Style];
+                but.Style = (Style) ResourceDictionary[building.Style];
                 but.Name = building.Name;
-                var color = (Color)ColorConverter.ConvertFromString(building.Color);
+                var color = (Color) ColorConverter.ConvertFromString(building.Color);
                 Brush brush = new SolidColorBrush(color);
                 but.Background = brush;
                 Grid.SetColumn(but, building.Column);
@@ -53,9 +55,9 @@ namespace GraphicEditor.ViewModel
 
         private void AddBuilding(object button)
         {
-            if (MainWindow.TypeOfUser == TypeOfUser.SUPERINTENDENT || MainWindow.TypeOfUser == TypeOfUser.NO_USER)
+            if (MainWindow.TypeOfUser == TypeOfUser.Superintendent || MainWindow.TypeOfUser == TypeOfUser.NoUser)
             {
-                Button but = (Button)button;
+                Button but = (Button) button;
                 if (but.Content.Equals("Empty field"))
                 {
                     (new AddBuilding(but)).ShowDialog();

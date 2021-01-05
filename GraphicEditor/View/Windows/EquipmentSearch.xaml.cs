@@ -1,9 +1,8 @@
-﻿using GraphicEditor.Repositories;
-using Model.Hospital;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
-using EquipmentRepository = GraphicEditor.Repositories.EquipmentRepository;
-using RoomRepository = GraphicEditor.Repositories.RoomRepository;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Repository.DatabaseSql;
+using HealthClinicBackend.Backend.Repository.Generic;
 
 namespace GraphicEditor.View.Windows
 {
@@ -12,9 +11,9 @@ namespace GraphicEditor.View.Windows
     /// </summary>
     public partial class EquipmentSearch : Window
     {
-        private EquipmentRepository equipmentRepository = new EquipmentRepository();
-        private RoomRepository roomRepository = new RoomRepository();
-        private MedicineRepository medicineRepository = new MedicineRepository();
+        private IEquipmentRepository equipmentRepository = new EquipmentDatabaseSql();
+        private IRoomRepository roomRepository = new RoomDatabaseSql();
+        private IMedicineRepository medicineRepository = new MedicineDatabaseSql();
 
         public EquipmentSearch()
         {
@@ -25,8 +24,8 @@ namespace GraphicEditor.View.Windows
         {
             string itemName = EquipmentNameTextBox.Text;
 
-            List<Equipment> equipments = equipmentRepository.GetEquipmentsByName(itemName);
-            List<Medicine> medicines = medicineRepository.GetMedicinesByName(itemName);
+            List<Equipment> equipments = equipmentRepository.GetByName(itemName);
+            List<Medicine> medicines = medicineRepository.GetByName(itemName);
 
             GenerateReport(itemName, equipments, medicines);
             EquipmentNameTextBox.Text = null;
@@ -38,10 +37,12 @@ namespace GraphicEditor.View.Windows
             {
                 equipments = new List<Equipment>();
             }
+
             if (medicines == null)
             {
                 medicines = new List<Medicine>();
             }
+
             if (equipments.Count != 0)
                 SearchEquipmentTextBlock.Text = ReportOnFoundEqipment(itemName, equipments);
             else if (medicines.Count != 0)
@@ -60,13 +61,16 @@ namespace GraphicEditor.View.Windows
             {
                 int checkCounter = 0;
                 resultOfSearch += checkCounter + 1 + "\n";
-                resultOfSearch += "\n" + "Generic name: " + medicine.GenericName + " MedicineManufacturerSerialNumber: " + medicine.MedicineManufacturer.SerialNumber + " MedicineTypeSerialNumber: " + medicine.MedicineType.SerialNumber + " SerialNumber: " + medicine.SerialNumber;
+                resultOfSearch += "\n" + "Generic name: " + medicine.GenericName +
+                                  " MedicineManufacturerSerialNumber: " + medicine.MedicineManufacturer.SerialNumber +
+                                  " MedicineTypeSerialNumber: " + medicine.MedicineType.SerialNumber +
+                                  " SerialNumber: " + medicine.SerialNumber;
                 if (++checkCounter == equipmentCounter)
                     return resultOfSearch += ".";
                 else
                     resultOfSearch += ",";
-
             }
+
             return null;
         }
 
@@ -80,7 +84,7 @@ namespace GraphicEditor.View.Windows
                 int checkCounter = 0;
                 foreach (Equipment equipment in equipments)
                 {
-                    Room room = roomRepository.GetRoomBySerialNumber(equipment.RoomId);
+                    Room room = roomRepository.GetById(equipment.RoomId);
                     resultOfSearch += "\nInformation about rooms: ";
                     //TODO resultOfSearch += RoomSearch.ReportOnFoundRooms(equipment.RoomId, room);
                     if (++checkCounter == equipmentCounter)
@@ -89,6 +93,7 @@ namespace GraphicEditor.View.Windows
                         resultOfSearch += ",";
                 }
             }
+
             return null;
         }
 

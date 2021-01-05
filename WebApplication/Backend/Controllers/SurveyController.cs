@@ -1,7 +1,7 @@
-﻿using health_clinic_class_diagram.Backend.Model.Survey;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.Survey;
 using WebApplication.Backend.Services;
 using WebApplication.Backend.Util;
 
@@ -11,53 +11,54 @@ namespace WebApplication.Backend.Controllers
     [ApiController]
     public class SurveyController : ControllerBase
     {
+        private readonly SurveyService _surveyService;
 
-        private readonly SurveyService surveyService;
-        public SurveyController()
+        public SurveyController(SurveyService surveyService)
         {
-            this.surveyService = new SurveyService();
+            _surveyService = surveyService;
         }
 
         [HttpPost("add")]
         public IActionResult AddNewSurvey(Survey surveyText)
         {
-            surveyService.AddNewSurvey(surveyText);
+            _surveyService.AddNewSurvey(surveyText);
             return Ok();
         }
+
         [HttpGet("getDoctors")]
-        public List<String> GetAllDoctorsFromReporstByPatientId(String patientId)
+        public List<String> GetAllDoctorsFromReportsByPatientId(String patientId)
         {
-            return surveyService.GetAllDoctorsFromReporstByPatientId(patientId);
+            return _surveyService.GetAllDoctorsFromReportsByPatientId(patientId);
         }
+
         [HttpGet("getDoctorsFromSurvey")]
-        public List<String> GetAllDoctorsFromReporstByPatientIdForSurvey(String patientId)
+        public List<String> GetAllDoctorsFromReportsByPatientIdForSurvey(String patientId)
         {
-            return surveyService.GetAllDoctorsFromReporstByPatientIdFromSurvey(patientId);
+            return _surveyService.GetAllDoctorsFromReportsByPatientIdFromSurvey(patientId);
         }
+
         [HttpGet("getDoctorsForSurveyList")]
-        public List<String> GetAllDoctorsFromReporstByPatientIdForSurveyList(String patientId)
+        public List<String> GetAllDoctorsFromReportsByPatientIdForSurveyList(String patientId)
         {
-            return surveyService.GetAllDoctorsFromReporstByPatientIdForSurveyList(patientId);
+            return _surveyService.GetAllDoctorsFromReportsByPatientIdForSurveyList(patientId);
         }
 
         [HttpGet("getStatistiEachQuestion")]
-        public List<StatisticAuxilaryClass> getStatisticsEachQuestion()
+        public List<StatisticAuxilaryClass> GetStatisticsEachQuestion()
         {
-            return surveyService.getStatisticsEachQuestion();
+            return _surveyService.GetStatisticsEachQuestion();
         }
 
         [HttpGet("getStatistiEachTopic")]
-        public List<StatisticAuxilaryClass> getStatisticsEachTopic()
+        public List<StatisticAuxilaryClass> GetStatisticsEachTopic()
         {
-            return surveyService.getStatisticsEachTopic();
-
+            return _surveyService.GetStatisticsEachTopic();
         }
 
         [HttpGet("getStatisticForDoctor")]
-        public List<StatisticAuxilaryClass> getStatisticsForDoctor(string ID)
+        public List<StatisticAuxilaryClass> GetStatisticsForDoctor(string id)
         {
-            return surveyService.getStatisticsForDoctor(ID);
-
+            return _surveyService.GetStatisticsForDoctor(id);
         }
     }
 }

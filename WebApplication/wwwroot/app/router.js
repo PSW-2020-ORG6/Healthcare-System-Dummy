@@ -7,6 +7,11 @@ const SuccessfulRegistration = { template: '<successfulRegistration></successful
 const Survey = { template: '<survey></survey>' }
 const Statistics = { template: '<statistics></statistics>' }
 const Search = { template: '<search></search>' }
+const Appointments = { template: '<appointments></appointments>' }
+const Appointment = { template: '<appointment></appointment>' }
+const FeedbackPatient = { template: '<feedbackPatient></feedbackPatient>' }
+const Account = { template: '<account></account>' }
+const FeedbackAdmin = { template: '<feedbackAdmin></feedbackAdmin>' }
 
 
 var temp = new Vue({
@@ -39,9 +44,23 @@ var temp = new Vue({
 		statistics: function () {
 			router.push("statistics")
 		},
-		},
 		search: function () {
 			router.push("search")
+		},
+		appointments: function () {
+			router.push("appointments")
+		},
+		appointment: function () {
+			router.push("appointment")
+		},
+		feedbackPatient: function () {
+			router.push("feedbackPatient")
+		},
+		account: function () {
+			router.push("account")
+		},
+		feedbackAdmin: function () {
+			router.push("feedbackAdmin")
 		}
 	}
 });
@@ -93,6 +112,31 @@ const router = new VueRouter({
 			path: '/search',
 			name: 'search',
 			component: Search,
+		},
+		{
+			path: '/appointments',
+			name: 'appointments',
+			component: Appointments,
+		},
+		{
+			path: '/appointment',
+			name: 'appointment',
+			component: Appointment,
+		},
+		{
+			path: '/feedbackPatient',
+			name: 'feedbackPatient',
+			component: FeedbackPatient,
+		},
+		{
+			path: '/account',
+			name: 'account',
+			component: Account,
+		},
+		{
+			path: '/feedbackAdmin',
+			name: 'feedbackAdmin',
+			component: FeedbackAdmin,
 		}
 	]
 });

@@ -1,7 +1,7 @@
-﻿using health_clinic_class_diagram.Backend.Dto;
-using Microsoft.AspNetCore.Mvc;
-using Model.Blog;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using HealthClinicBackend.Backend.Dto;
+using HealthClinicBackend.Backend.Model.Blog;
 using WebApplication.Backend.Services;
 
 namespace WebApplication.Backend.Controllers
@@ -13,11 +13,13 @@ namespace WebApplication.Backend.Controllers
     [ApiController]
     public class FeedbackController : ControllerBase
     {
-        private readonly FeedbackService feedbackService;
-        public FeedbackController()
+        private readonly FeedbackService _feedbackService;
+
+        public FeedbackController(FeedbackService feedbackService)
         {
-            this.feedbackService = new FeedbackService();
+            _feedbackService = feedbackService;
         }
+
         ///Tanja Drcelic RA124/2017
         /// <summary>
         ///calls method for get all feedbacks from feedback table
@@ -26,10 +28,11 @@ namespace WebApplication.Backend.Controllers
         ///list of feedbacks
         ///</returns>
         [HttpGet("all")]
-        public List<Feedback> GetAllFeedbacks()
+        public List<FeedbackDto> GetAllFeedbacks()
         {
-            return feedbackService.GetAllFeedbacks();
+            return _feedbackService.GetAllFeedbacks();
         }
+
         ///Repovic Aleksa RA-52-2017
         /// <summary>
         ///calls method for adding new feedback in feedback table
@@ -38,15 +41,17 @@ namespace WebApplication.Backend.Controllers
         ///information about sucess in string format
         ///</returns>
         [HttpPost("add")]
-        public IActionResult AddNewFeedbacк(FeedbackDTO feedbackDTO)
+        public IActionResult AddNewFeedbacк(FeedbackDto feedbackDTO)
         {
             if (feedbackDTO.IsApprovalValid() && feedbackDTO.IsCorrectText())
             {
-                feedbackService.AddNewFeedback(new Feedback(feedbackDTO));
+                _feedbackService.AddNewFeedback(new Feedback(feedbackDTO));
                 return Ok();
             }
+
             return BadRequest();
         }
+
         ///Aleksandra Milijevic RA 22/2017
         /// <summary>
         ///calls method for get approved feedbacks from feedback table
@@ -55,10 +60,11 @@ namespace WebApplication.Backend.Controllers
         ///list of approved feedbacks
         ///</returns>
         [HttpGet("approved")]
-        public List<Feedback> GetApprovedFeedbacks()
+        public List<FeedbackDto> GetApprovedFeedbacks()
         {
-            return feedbackService.GetApprovedFeedbacks();
+            return _feedbackService.GetApprovedFeedbacks();
         }
+
         ///Tanja Drcelic RA124/2017
         /// <summary>
         ///calls method for get disapproved feedbacks from feedback table
@@ -67,10 +73,11 @@ namespace WebApplication.Backend.Controllers
         ///list of not approved feedbacks
         ///</returns>
         [HttpGet("disapproved")]
-        public List<Feedback> GetDisapprovedFeedbacks()
+        public List<FeedbackDto> GetDisapprovedFeedbacks()
         {
-            return feedbackService.GetDisapprovedFeedbacks();
+            return _feedbackService.GetDisapprovedFeedbacks();
         }
+
         ///Marija Vucetic 
         /// <summary>
         ///calls method for set na value of attribute Approved
@@ -79,13 +86,14 @@ namespace WebApplication.Backend.Controllers
         ///list of not approved feedbacks
         ///</returns>
         [HttpPut("approve")]
-        public IActionResult ApproveFeedback(FeedbackDTO feedbackDTO)
+        public IActionResult ApproveFeedback(FeedbackDto feedbackDTO)
         {
             if (feedbackDTO.IsApprovalValid() && feedbackDTO.IsCorrectText())
             {
-                feedbackService.ApproveFeedback(feedbackDTO);
+                _feedbackService.ApproveFeedback(feedbackDTO);
                 return Ok();
             }
+
             return BadRequest();
         }
     }

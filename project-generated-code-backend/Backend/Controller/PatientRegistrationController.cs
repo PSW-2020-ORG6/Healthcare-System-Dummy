@@ -3,30 +3,29 @@
 // Created: Sunday, June 7, 2020 4:19:02 PM
 // Purpose: Definition of Class PatientRegistrationController
 
-using Backend.Dto;
-using Backend.Service.HospitalAccountsService;
-using Model.Accounts;
+using HealthClinicBackend.Backend.Dto;
+using HealthClinicBackend.Backend.Model.Accounts;
+using HealthClinicBackend.Backend.Service.HospitalAccountsService;
 
-namespace Backend.Controller
+namespace HealthClinicBackend.Backend.Controller
 {
     public class PatientRegistrationController
     {
-        public PatientRegistrationService patientRegistrationService;
+        private readonly PatientRegistrationService _patientRegistrationService;
 
-        public PatientRegistrationController()
+        public PatientRegistrationController(PatientRegistrationService patientRegistrationService)
         {
-            patientRegistrationService = new PatientRegistrationService();
+            _patientRegistrationService = patientRegistrationService;
         }
 
-        public void RegisterPatient(PatientDTO patientDTO)
+        public void RegisterPatient(PatientDto patientDto)
         {
-            patientRegistrationService.RegisterPatient(patientDTO);
+            _patientRegistrationService.RegisterPatient(patientDto);
         }
 
         public void DeletePatientAccount(Patient patient)
         {
-            patientRegistrationService.DeletePatientAccount(patient);
+            _patientRegistrationService.DeletePatientAccount(patient);
         }
-
     }
 }

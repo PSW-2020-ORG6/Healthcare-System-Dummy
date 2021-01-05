@@ -1,24 +1,26 @@
-﻿using Backend.Repository;
-using HealthClinic.Backend.Model.Hospital;
-using Model.Hospital;
-using Model.Schedule;
-using Model.Util;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Model.Schedule;
+using HealthClinicBackend.Backend.Model.Util;
+using HealthClinicBackend.Backend.Repository.DatabaseSql;
+using HealthClinicBackend.Backend.Repository.Generic;
 
-namespace Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
+namespace HealthClinicBackend.Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
 {
     public class RoomAvailabilityService
     {
-        private AppointmentRepository appointmentRepository;
-        private RenovationRepository renovationRepository;
-        private BedReservationRepository bedReservationRepository;
+        private readonly IAppointmentRepository _appointmentRepository;
+        private readonly IRenovationRepository _renovationRepository;
+        private readonly IBedReservationRepository _bedReservationRepository;
 
-        public RoomAvailabilityService()
+        public RoomAvailabilityService(IAppointmentRepository appointmentRepository,
+            IRenovationRepository renovationRepository, IBedReservationRepository bedReservationRepository)
         {
-            this.appointmentRepository = new AppointmentFileSystem();
-            this.renovationRepository = new RenovationFileSystem();
-            this.bedReservationRepository = new BedReservationFileSystem();
+            _appointmentRepository = appointmentRepository;
+            _renovationRepository = renovationRepository;
+            _bedReservationRepository = bedReservationRepository;
         }
 
         public bool IsRoomAvailableAtAnyTime(Room room, List<TimeInterval> timeIntervals)
@@ -30,8 +32,10 @@ namespace Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
                     return true;
                 }
             }
+
             return false;
         }
+
         public bool IsAnyRoomAvailable(List<Room> rooms, TimeInterval timeInterval)
         {
             foreach (Room room in rooms)
@@ -41,8 +45,10 @@ namespace Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
                     return true;
                 }
             }
+
             return false;
         }
+
         public bool IsRoomAvailable(Room room, TimeInterval timeInterval)
         {
             return !IsRoomScheduled(room, timeInterval) && !IsRoomInRenovation(room, timeInterval);
@@ -50,52 +56,38 @@ namespace Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
 
         public bool IsRoomAvailableForInpatientCare(Room room)
         {
-            Console.WriteLine("" + HasAvailableBed(room) + " " + !IsRoomInRenovation(room, new TimeInterval(DateTime.Now, DateTime.Now)));
             return HasAvailableBed(room) && !IsRoomInRenovation(room, new TimeInterval(DateTime.Now, DateTime.Now));
         }
+
         public List<Bed> GetAvailableBeds(Room room)
         {
             List<Bed> beds = new List<Bed>();
-            foreach (Equipment equipment in room.Equipment)
+            foreach (Bed bed in room.Beds)
             {
-                beds.Add(equipment as Bed);
-                // ne razlikuje krevet i opremu
-                //if(equipment.IsBed() && !IsBedReserved(equipment))
-                //{
-                //    beds.Add(equipment as Bed);
-                //}
+                beds.Add(bed);
+                if (!IsBedReserved(bed))
+                {
+                    beds.Add(bed);
+                }
             }
+
             return beds;
         }
 
         private bool HasAvailableBed(Room room)
         {
-            return true;
-            // ne razlikuje krevet i opremu
-            //foreach(Equipment equipment in room.Equipment)
-            //{
-            //    if(equipment.IsBed() && !IsBedReserved(equipment))
-            //    {
-            //        return true;
-            //    }
-            //}
-            //return false;
+            return room.Beds.Any(bed => !IsBedReserved(bed));
         }
-        private bool IsBedReserved(Equipment bed)
+
+        private bool IsBedReserved(Bed bed)
         {
-            List<BedReservation> bedReservations = bedReservationRepository.GetAll();
-            foreach (BedReservation bedReservation in bedReservations)
-            {
-                if (bedReservation.Bed.Equals(bed))
-                {
-                    return false;
-                }
-            }
-            return true;
+            var bedReservations = _bedReservationRepository.GetAll();
+            return bedReservations.All(bedReservation => !bedReservation.Bed.Equals(bed));
         }
+
         private bool IsRoomInRenovation(Room room, TimeInterval timeInterval)
         {
-            List<Renovation> renovations = renovationRepository.GetRenovationsByRoom(room);
+            List<Renovation> renovations = _renovationRepository.GetRenovationsByRoom(room);
             foreach (Renovation renovation in renovations)
             {
                 if (timeInterval.IsOverLapping(renovation.TimeInterval))
@@ -103,12 +95,13 @@ namespace Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
                     return true;
                 }
             }
+
             return false;
         }
 
         private bool IsRoomScheduled(Room room, TimeInterval timeInterval)
         {
-            List<Appointment> appointments = appointmentRepository.GetAppointmentsByRoom(room);
+            List<Appointment> appointments = _appointmentRepository.GetAppointmentsByRoom(room);
             foreach (Appointment appointment in appointments)
             {
                 if (timeInterval.IsOverLapping(appointment.TimeInterval))
@@ -116,6 +109,7 @@ namespace Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
                     return true;
                 }
             }
+
             return false;
         }
     }

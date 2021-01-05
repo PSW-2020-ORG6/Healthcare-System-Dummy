@@ -3,42 +3,48 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class SpecialistReferral
 
-using Model.Accounts;
-using Model.Schedule;
-using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using HealthClinicBackend.Backend.Model.Accounts;
+using HealthClinicBackend.Backend.Model.Schedule;
+using Newtonsoft.Json;
 
-namespace Model.MedicalExam
+namespace HealthClinicBackend.Backend.Model.MedicalExam
 {
     public class SpecialistReferral : AdditionalDocument
     {
-        private ProcedureType procedureType;
-        private Physitian physitian;
+        [ForeignKey("ProcedureType")] public string ProcedureTypeSerialNumber { get; set; }
+        public ProcedureType ProcedureType { get; set; }
+        [ForeignKey("Physician")] public string PhysicianSerialNumber { get; set; }
+        public Physician Physician { get; set; }
 
-        public ProcedureType ProcedureType { get => procedureType; }
-        public Physitian Physitian { get => physitian; }
-
-        public SpecialistReferral(DateTime date, string notes, ProcedureType procedureType, Physitian physitian) : base(Guid.NewGuid().ToString(), date, notes)
+        public SpecialistReferral() : base()
         {
-            this.procedureType = procedureType;
-            this.physitian = physitian;
+        }
+
+        public SpecialistReferral(DateTime date, string notes, ProcedureType procedureType, Physician physician) :
+            base(date, notes)
+        {
+            ProcedureType = procedureType;
+            Physician = physician;
         }
 
         [JsonConstructor]
-        public SpecialistReferral(String serialNumber, DateTime date, string notes, ProcedureType procedureType, Physitian physitian) : base(serialNumber, date, notes)
+        public SpecialistReferral(String serialNumber, DateTime date, string notes, ProcedureType procedureType,
+            Physician physician) : base(serialNumber, date, notes)
         {
-            this.procedureType = procedureType;
-            this.physitian = physitian;
+            ProcedureType = procedureType;
+            Physician = physician;
         }
 
         public override bool Equals(object obj)
         {
-            SpecialistReferral other = obj as SpecialistReferral;
-            if (other == null)
+            if (!(obj is SpecialistReferral other))
             {
                 return false;
             }
-            return this.SerialNumber.Equals(other.SerialNumber);
+
+            return SerialNumber.Equals(other.SerialNumber);
         }
 
         public override int GetHashCode()
@@ -48,8 +54,7 @@ namespace Model.MedicalExam
 
         public override string ToString()
         {
-            return base.ToString() + "\nphysitian: " + this.Physitian.FullName
-                + "\nspecialization: " + this.procedureType;
+            return base.ToString() + "\nphysitian: " + Physician.Name + " " + Physician.Surname + "\nspecialization: " + ProcedureType;
         }
     }
 }

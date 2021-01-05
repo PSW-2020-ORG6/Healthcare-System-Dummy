@@ -568,7 +568,7 @@
 
 
         axios
-            .get('http://localhost:49900/feedback/approved')
+            .get('/feedback/approved')
             .then(response => {
                 this.approvedFeedbacks = response.data
             })
@@ -577,7 +577,7 @@
             })
 
         axios
-            .get('http://localhost:49900/feedback/disapproved')
+            .get('/feedback/disapproved')
             .then(response => {
                 this.disapprovedFeedbacks = response.data
             })
@@ -585,7 +585,7 @@
                 alert(error)
             })
         axios
-            .get('http://localhost:49900/patient/all')
+            .get('/patient/all')
             .then(response => {
                 this.patients = response.data
             })
@@ -593,12 +593,8 @@
                 alert(error)
             })
 
-
-
-
-
         axios
-            .get('http://localhost:49900/survey/getDoctors', { params: { patientId: "0003" } })
+            .get('/appointment/physicians')
             .then(response => {
                 this.doctorsList = response.data
             })
@@ -614,7 +610,7 @@
     mounted() {
 
         axios
-            .get('http://localhost:49900/survey/getStatistiEachQuestion')
+            .get('/survey/getStatistiEachQuestion')
             .then(response => {
                 this.statisticEachQuestion = response.data;
 
@@ -741,7 +737,7 @@
             })
 
         axios
-            .get('http://localhost:49900/survey/getStatistiEachTopic')
+            .get('/survey/getStatistiEachTopic')
             .then(response => {
                 this.statisticEachTopic = response.data;
 
@@ -781,12 +777,9 @@
     beforeMount() {
 
         axios
-            .get('http://localhost:49900/survey/getDoctors', { params: { patientId: "0003" } })
+            .get('/appointment/physicians')
             .then(response => {
                 this.doctorsList = response.data
-            })
-            .catch(error => {
-                alert(error)
             })
 
 
@@ -812,7 +805,7 @@
 
 
             <select id = "selectDoctor" class="form-control custom-select" v-model = "selectedDoctor">
-              <option div  v-for="(doctor) in doctorsList" v-bind:value="doctor" v-on:click="getStatisticsForDoctor()" >{{doctor}}</option>
+              <option div  v-for="(doctor) in doctorsList" v-bind:value="doctor" v-on:click="getStatisticsForDoctor()" >{{doctor.fullName}}</option>
             </select>
 
 
@@ -829,7 +822,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="heading0 mb-3 text-center">
-                                                                        <h2>{{this.selectedDoctor}}</h2>
+                                                                        <h2>{{this.selectedDoctor.fullName}}</h2>
                                                                     </div>
                                                                     <div class="rating-bar0 justify-content-center">
                                                                         <table class="text-left mx-auto">
@@ -885,7 +878,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -978,7 +971,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1057,7 +1050,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1135,7 +1128,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1241,7 +1234,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1338,7 +1331,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1423,7 +1416,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1496,7 +1489,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1568,7 +1561,7 @@
                                                                                                         </tr>
                                                                                                     </table>
                                                                                                 </div>
-                                                                                                <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                                                <div>  </div>
                                                                                                 <div class="review-head"> <a href="#">
                                                                                                       <br></br>
                                                                                                     </a> </div>
@@ -1645,7 +1638,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1718,7 +1711,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1800,7 +1793,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1878,7 +1871,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -1951,7 +1944,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2023,7 +2016,7 @@
                                                                                                         </tr>
                                                                                                     </table>
                                                                                                 </div>
-                                                                                                <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                                                <div>  </div>
                                                                                                 <div class="review-head"> <a href="#">
                                                                                                       <br></br>
                                                                                                     </a> </div>
@@ -2103,7 +2096,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2194,7 +2187,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2272,7 +2265,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2345,7 +2338,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2417,7 +2410,7 @@
                                                                                                         </tr>
                                                                                                     </table>
                                                                                                 </div>
-                                                                                                <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                                                <div>  </div>
                                                                                                 <div class="review-head"> <a href="#">
                                                                                                       <br></br>
                                                                                                     </a> </div>
@@ -2495,7 +2488,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2568,7 +2561,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2653,7 +2646,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2731,7 +2724,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2804,7 +2797,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2889,7 +2882,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -2969,7 +2962,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -3042,7 +3035,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </div>
-                                                                    <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                    <div>  </div>
                                                                     <div class="review-head"> <a href="#">
                                                                           <br></br>
                                                                         </a> </div>
@@ -3114,7 +3107,7 @@
                                                                                                         </tr>
                                                                                                     </table>
                                                                                                 </div>
-                                                                                                <div> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> <span class="fa fa-star star-active"></span> </div>
+                                                                                                <div>  </div>
                                                                                                 <div class="review-head"> <a href="#">
                                                                                                       <br></br>
                                                                                                     </a> </div>
@@ -3141,9 +3134,10 @@
 
     methods: {
         getStatisticsForDoctor: function () {
-            axios
-                .get('http://localhost:49900/survey/getStatisticForDoctor', { params: { ID: this.selectedDoctor } })
+            axios          
+                .get('/survey/getStatisticForDoctor', { params: { ID: this.selectedDoctor.fullName } })
                 .then(response => {
+
                     this.statisticDoctor = response.data;
 
 

@@ -8,9 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Repositories\**" />
 	  <Compile Remove="Repository\**" />
+	  <EmbeddedResource Remove="Repositories\**" />
 	  <EmbeddedResource Remove="Repository\**" />
+	  <None Remove="Repositories\**" />
 	  <None Remove="Repository\**" />
+	  <Page Remove="Repositories\**" />
 	  <Page Remove="Repository\**" />
 	</ItemGroup>
 

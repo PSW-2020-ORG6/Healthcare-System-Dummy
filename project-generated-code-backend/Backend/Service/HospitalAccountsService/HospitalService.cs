@@ -3,50 +3,46 @@
 // Created: Sunday, June 7, 2020 4:19:02 PM
 // Purpose: Definition of Class HospitalService
 
-using Backend.Repository;
-using HCI_SIMS_PROJEKAT.Backend.Repository;
-using Model.MedicalExam;
-using Model.Schedule;
-using Model.Util;
 using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.MedicalExam;
+using HealthClinicBackend.Backend.Model.Schedule;
+using HealthClinicBackend.Backend.Model.Util;
+using HealthClinicBackend.Backend.Repository.Generic;
 
-namespace Backend.Service.HospitalAccountsService
+namespace HealthClinicBackend.Backend.Service.HospitalAccountsService
 {
-    //TODO: REFAKTORISATI samo geteri za country, procedure type, room type... (stvari koje idu u CB)
-    // Dodati PhysitianAccountsService i SecretaryAccountsService 
     public class HospitalService
     {
-        private PatientRepository patientRepository;
-        private CountryRepository countryRepository;
-        private ProcedureTypeRepository procedureTypeRepository;
-        private DiagnosticTypeRepository diagnosticTypeRepository;
+        private readonly ICountryRepository _countryRepository;
+        private readonly IProcedureTypeRepository _procedureTypeRepository;
+        private readonly IDiagnosticTypeRepository _diagnosticTypeRepository;
 
-        public HospitalService()
+        public HospitalService(ICountryRepository countryRepository, IProcedureTypeRepository procedureTypeRepository,
+            IDiagnosticTypeRepository diagnosticTypeRepository)
         {
-            this.patientRepository = new PatientFileSystem();
-            this.countryRepository = new CountryFileSystem();
-            this.procedureTypeRepository = new ProcedureTypeFileSystem();
-            this.diagnosticTypeRepository = new DiagnosticTypeFileSystem();
+            _countryRepository = countryRepository;
+            _procedureTypeRepository = procedureTypeRepository;
+            _diagnosticTypeRepository = diagnosticTypeRepository;
         }
 
         internal List<ProcedureType> GetAllProcedureTypes()
         {
-            return procedureTypeRepository.GetAll();
+            return _procedureTypeRepository.GetAll();
         }
 
-        internal List<Country> getAllCountries()
+        internal List<Country> GetAllCountries()
         {
-            return countryRepository.GetAll();
+            return _countryRepository.GetAll();
         }
 
         public List<ProcedureType> GetProcedureTypes()
         {
-            return procedureTypeRepository.GetAll();
+            return _procedureTypeRepository.GetAll();
         }
 
         public List<DiagnosticType> GetDiagnosticTypes()
         {
-            return diagnosticTypeRepository.GetAll();
+            return _diagnosticTypeRepository.GetAll();
         }
     }
 }

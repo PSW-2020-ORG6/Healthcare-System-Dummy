@@ -3,81 +3,95 @@
 // Created: Sunday, June 7, 2020 4:19:02 PM
 // Purpose: Definition of Class AppointmentSchedulingService
 
-using Backend.Dto;
-using Backend.Service.SchedulingService.AppointmentGeneralitiesOptions;
-using Backend.Service.SchedulingService.PriorityStrategies;
-using Backend.Service.SchedulingService.SchedulingStrategies;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using HealthClinicBackend.Backend.Dto;
+using HealthClinicBackend.Backend.Repository.Generic;
+using HealthClinicBackend.Backend.Service.SchedulingService.AppointmentGeneralitiesOptions;
+using HealthClinicBackend.Backend.Service.SchedulingService.PriorityStrategies;
+using HealthClinicBackend.Backend.Service.SchedulingService.SchedulingStrategies;
 
-namespace Backend.Service.SchedulingService
+namespace HealthClinicBackend.Backend.Service.SchedulingService
 {
     public class AppointmentSchedulingService
     {
-        private SchedulingStrategy schedulingStrategyContext;
-        private AppointmentGeneralitiesManager appointmentGeneralitiesManager;
+        public SchedulingStrategy SchedulingStrategyContext;
+        private readonly AppointmentGeneralitiesManager _appointmentGeneralitiesManager;
 
-        public AppointmentSchedulingService(SchedulingStrategy schedulingStrategyContext)
+        public AppointmentSchedulingService(IPhysicianRepository physicianRepository,
+            IRoomRepository roomRepository,
+            IAppointmentRepository appointmentRepository,
+            IRenovationRepository renovationRepository,
+            IBedReservationRepository bedReservationRepository)
         {
-            this.schedulingStrategyContext = schedulingStrategyContext;
-            this.appointmentGeneralitiesManager = new AppointmentGeneralitiesManager();
+            SchedulingStrategyContext = new PatientSchedulingStrategy();
+            _appointmentGeneralitiesManager = new AppointmentGeneralitiesManager(physicianRepository, roomRepository,
+                appointmentRepository, renovationRepository, bedReservationRepository);
         }
 
-        public List<AppointmentDTO> GetAvailableAppointments(AppointmentDTO appointmentPreferences)
+        public List<AppointmentDto> GetAvailableAppointments(AppointmentDto appointmentPreferences)
         {
-            AppointmentDTO preparedAppointmentPreferences = schedulingStrategyContext.PrepareAppointment(appointmentPreferences);
-            return appointmentGeneralitiesManager.GetAllAvailableAppointments(preparedAppointmentPreferences);
+            AppointmentDto preparedAppointmentPreferences =
+                SchedulingStrategyContext.PrepareAppointment(appointmentPreferences);
+            return _appointmentGeneralitiesManager.GetAllAvailableAppointments(preparedAppointmentPreferences);
         }
-        public AppointmentDTO FindNearestAppointment(AppointmentDTO appointmentPreferences)
+
+        public AppointmentDto FindNearestAppointment(AppointmentDto appointmentPreferences)
         {
-            AppointmentDTO preparedAppointmentPreferences = schedulingStrategyContext.PrepareAppointment(appointmentPreferences);
+            AppointmentDto preparedAppointmentPreferences =
+                SchedulingStrategyContext.PrepareAppointment(appointmentPreferences);
             throw new NotImplementedException();
         }
-        public AppointmentDTO GetSuggestedAppointment(SuggestedAppointmentDTO suggestedAppointmentDTO)
-        {
-            DateTime currentDate = suggestedAppointmentDTO.DateStart;
 
-            while (!currentDate.Equals(suggestedAppointmentDTO.DateEnd))
+        public AppointmentDto GetSuggestedAppointment(SuggestedAppointmentDto suggestedAppointmentDto)
+        {
+            DateTime currentDate = suggestedAppointmentDto.DateStart;
+
+            while (!currentDate.Equals(suggestedAppointmentDto.DateEnd))
             {
-                AppointmentDTO appointment = new AppointmentDTO();
-                appointment.Date = currentDate;
-                appointment.Physitian = suggestedAppointmentDTO.Physitian;
-                appointment.Patient = suggestedAppointmentDTO.Patient;
-                List<AppointmentDTO> suggestedAppointmentDTOs = GetAvailableAppointments(appointment);
-                if (suggestedAppointmentDTOs.Count != 0)
+                AppointmentDto appointment = new AppointmentDto
                 {
-                    return suggestedAppointmentDTOs[0];
+                    Date = currentDate,
+                    Physician = suggestedAppointmentDto.Physician,
+                    Patient = suggestedAppointmentDto.Patient
+                };
+                List<AppointmentDto> suggestedAppointmentDtos = GetAvailableAppointments(appointment);
+                if (suggestedAppointmentDtos.Count != 0)
+                {
+                    return suggestedAppointmentDtos[0];
                 }
+
                 currentDate = currentDate.AddDays(1);
             }
-            if (suggestedAppointmentDTO.Prior)
+
+            if (suggestedAppointmentDto.Prior)
             {
                 DatePriorityStrategy datePriorityStrategy = new DatePriorityStrategy();
-                List<AppointmentDTO> suggestedAppointmentDTOsDate = datePriorityStrategy.FindSuggestedAppointments(suggestedAppointmentDTO);
-                foreach (AppointmentDTO appointmentDTO in suggestedAppointmentDTOsDate)
-                {
-                    List<AppointmentDTO> suggestedAppointmentDTOs = GetAvailableAppointments(appointmentDTO);
-                    if (suggestedAppointmentDTOs.Count != 0)
-                    {
-                        return suggestedAppointmentDTOs[0];
-                    }
-                }
+                List<AppointmentDto> suggestedAppointmentDtosDate =
+                    datePriorityStrategy.FindSuggestedAppointments(suggestedAppointmentDto);
+                return (from appointmentDto in suggestedAppointmentDtosDate
+                    select GetAvailableAppointments(appointmentDto)
+                    into suggestedAppointmentDtOs
+                    where suggestedAppointmentDtOs.Count != 0
+                    select suggestedAppointmentDtOs[0]).FirstOrDefault();
             }
             else
             {
-                PhysitianPriorityStrategy physitianPriorityStrategy = new PhysitianPriorityStrategy();
-                List<AppointmentDTO> suggestedAppointmentDTOsPhysitian = physitianPriorityStrategy.FindSuggestedAppointments(suggestedAppointmentDTO);
-                foreach (AppointmentDTO appointmentDTO in suggestedAppointmentDTOsPhysitian)
+                PhysitianPriorityStrategy physicianPriorityStrategy = new PhysitianPriorityStrategy();
+                List<AppointmentDto> suggestedAppointmentDtosPhysician =
+                    physicianPriorityStrategy.FindSuggestedAppointments(suggestedAppointmentDto);
+                foreach (AppointmentDto appointmentDto in suggestedAppointmentDtosPhysician)
                 {
-                    List<AppointmentDTO> suggestedAppointmentDTOs = GetAvailableAppointments(appointmentDTO);
-                    if (suggestedAppointmentDTOs.Count != 0)
+                    List<AppointmentDto> suggestedAppointmentDtos = GetAvailableAppointments(appointmentDto);
+                    if (suggestedAppointmentDtos.Count != 0)
                     {
-                        return suggestedAppointmentDTOs[0];
+                        return suggestedAppointmentDtos[0];
                     }
                 }
             }
+
             return null;
         }
-
     }
 }

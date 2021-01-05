@@ -11,6 +11,7 @@ Vue.component("search", {
     },
     template:
     `
+    <div id="search">
         <div class= "container">
             <br/><h3 class="text">Search - prescription and report</h3><br/>
             <ul class="nav nav-tabs" role="tablist">
@@ -23,7 +24,7 @@ Vue.component("search", {
             </ul>
             <div>
                 <div class="tab-content">
-                    <div id="simpleSearch" class="container tab-pane active"><br/>
+                    <div id="simpleSearch" class="container tab-pane active">
                         <div class="container">
                             <div class="container"><br/>
                                 <div class="row">
@@ -107,17 +108,21 @@ Vue.component("search", {
                                             <td>
                                                 <button class="circledelete" v-on:click="DeleteRowSimple(), simpleSearches[2]=false"><i class="fa fa-close""></i></button>                           
                                             </td>
-                                       </tr>
-                                   </tbody>
+                                        </tr>
+                                        <tr>
+                                            <button v-if="rowSimple<3" class="circleadd" v-on:click="AddRowSimple()"><i class="fa fa-plus"></i></button><br/><br/>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
-                            <button v-if="rowSimple<3" class="circleadd" v-on:click="AddRowSimple()"><i class="fa fa-plus"></i></button><br/><br/>
                         </div><br/><br/>
                         <div class="row">
                             <label>&nbsp&nbsp Date from &nbsp&nbsp</label><input id="dateSimpleFrom" type="date"></input>
                             <label>&nbsp&nbsp to &nbsp&nbsp</label><input id="dateSimpleTo" type="date"></input>
                         </div><br/><br/>
-                        <button class="btnSearch btn-info btn-lg" v-on:click="SearchSimple()">Search</button>                       
+                        <table>
+                            <button class="btnSearch btn-info btn-lg" v-on:click="SearchSimple()">Search</button>
+                        </table>
                         </div>
                     </div>
                     <div id="advancedSearch" class="container tab-pane fade">
@@ -224,18 +229,22 @@ Vue.component("search", {
                                               </td>
                                             <td>
                                                 <button class="circledelete" v-on:click="DeleteRowAdvanced(), advancedSearches[2]=false"><i class="fa fa-close""></i></button>                           
-                                            </td>
-                                       </tr>
+                                            </td>                                           
+                                        </tr>
+                                        <tr>
+                                            <button v-if="rowAdvanced<3" class="circleadd" v-on:click="AddRowAdvanced()"><i class="fa fa-plus"></i></button><br/><br/>
+                                        </tr>
                                    </tbody>
                                 </table>
                             </div>
-                            <button v-if="rowAdvanced<3" class="circleadd" v-on:click="AddRowAdvanced()"><i class="fa fa-plus"></i></button><br/><br/>
                         </div><br/><br/>
                         <div class="row">
                             <label>&nbsp&nbsp Date from &nbsp&nbsp</label><input id="dateAdvancedFrom" type="date"></input>
                             <label>&nbsp&nbsp to &nbsp&nbsp</label><input id="dateAdvancedTo" type="date"></input>
                         </div><br/><br/>
-                        <button class="btnSearch btn-info btn-lg" v-on:click="AdvancedSearch()">Search</button>
+                        <table>
+                            <button class="btnSearch btn-info btn-lg" v-on:click="AdvancedSearch()">Search</button>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -259,6 +268,7 @@ Vue.component("search", {
                  </table>
             </div><br/>
         </div> 
+</div>
 	`,
     methods: {
         AddRowAdvanced: function () {
@@ -291,7 +301,7 @@ Vue.component("search", {
                 var prescriptionSearch = this.PrescriptionAdvancedSearch()
                 var reportSearch = this.ReportAdvancedSearch()
                 axios
-                    .get('http://localhost:49900/user/advancedSearch', { params: { prescriptionSearch: prescriptionSearch, reportSearch: reportSearch, date: date } })
+                    .get('/user/advancedSearch', { params: { prescriptionSearch: prescriptionSearch, reportSearch: reportSearch, date: date } })
                     .then(response => {
                         this.search = response.data
                     })
@@ -424,7 +434,7 @@ Vue.component("search", {
                 var prescriptionSimpleSearch = this.PrescriptionSimpleSearch()
                 var reportSimpleSearch = this.ReportSimpleSearch()
                 axios
-                    .get('http://localhost:49900/user/advancedSearch', { params: { prescriptionSearch: prescriptionSimpleSearch, reportSearch: reportSimpleSearch, date: date } })
+                    .get('/user/advancedSearch', { params: { prescriptionSearch: prescriptionSimpleSearch, reportSearch: reportSimpleSearch, date: date } })
                     .then(response => {
                         this.search = response.data
                     })

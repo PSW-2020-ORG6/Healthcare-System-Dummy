@@ -3,62 +3,60 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class InpatientCare
 
-using Backend.Model.Util;
-using Model.Accounts;
-using Newtonsoft.Json;
 using System;
+using HealthClinicBackend.Backend.Model.Accounts;
+using HealthClinicBackend.Backend.Model.Util;
+using Newtonsoft.Json;
 
-namespace Model.MedicalExam
+namespace HealthClinicBackend.Backend.Model.MedicalExam
 {
     public class InpatientCare : Entity
     {
-        private DateTime dateOfAdmition;
-        private DateTime dateOfDischarge;
+        public DateTime DateOfAdmission { get; set; }
+        public DateTime DateOfDischarge { get; set; }
+        public Physician Physician { get; set; }
+        public Patient Patient { get; set; }
 
-        private Physitian physitian;
-        private Patient patient;
-
-        public DateTime DateOfAdmition { get => dateOfAdmition; }
-        public DateTime DateOfDischarge { get => dateOfDischarge; }
-        public Physitian Physitian { get => physitian; }
-        public Patient Patient { get => patient; }
-
-        public InpatientCare(DateTime dateOfAdmition, DateTime dateOfDischarge, Physitian physitian, Patient patient) : base(Guid.NewGuid().ToString())
+        public InpatientCare(DateTime dateOfAdmition, DateTime dateOfDischarge, Physician physician,
+            Patient patient) : base()
         {
-            this.dateOfAdmition = dateOfAdmition;
-            this.dateOfDischarge = dateOfDischarge;
-            this.physitian = physitian;
-            this.patient = patient;
+            DateOfAdmission = dateOfAdmition;
+            DateOfDischarge = dateOfDischarge;
+            Physician = physician;
+            Patient = patient;
         }
 
         [JsonConstructor]
-        public InpatientCare(String serialNumber, DateTime dateOfAdmition, DateTime dateOfDischarge, Physitian physitian, Patient patient) : base(serialNumber)
+        public InpatientCare(String serialNumber, DateTime dateOfAdmition, DateTime dateOfDischarge,
+            Physician physician, Patient patient) : base(serialNumber)
         {
-            this.dateOfAdmition = dateOfAdmition;
-            this.dateOfDischarge = dateOfDischarge;
-            this.physitian = physitian;
-            this.patient = patient;
+            DateOfAdmission = dateOfAdmition;
+            DateOfDischarge = dateOfDischarge;
+            Physician = physician;
+            Patient = patient;
         }
 
         public override bool Equals(object obj)
         {
-            InpatientCare other = obj as InpatientCare;
-            if (other == null)
+            if (!(obj is InpatientCare other))
             {
                 return false;
             }
-            return this.DateOfAdmition.Equals(other.DateOfAdmition) && this.DateOfDischarge.Equals(other.DateOfDischarge)
-                && this.Patient.Equals(other.Patient) && this.Physitian.Equals(other.Physitian);
+
+            return DateOfAdmission.Equals(other.DateOfAdmission) && DateOfDischarge.Equals(other.DateOfDischarge) &&
+                   Patient.Equals(other.Patient) && Physician.Equals(other.Physician);
         }
 
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
         public override string ToString()
         {
-            return "patient: " + patient.FullName + "\nphysitian: " + physitian.FullName + "\ndate of admition:"
-                + dateOfAdmition.ToString("dd.MM.yyyy.") + "\ndate of discharge:" + dateOfDischarge.ToString("dd.MM.yyyy.");
+            return "patient: " + Patient.Name + " " + Patient.Surname + "\nphysitian: " + Physician.Name + " " + Physician.Surname + "\ndate of admition:" +
+                   DateOfAdmission.ToString("dd.MM.yyyy.") + "\ndate of discharge:" +
+                   DateOfDischarge.ToString("dd.MM.yyyy.");
         }
     }
 }

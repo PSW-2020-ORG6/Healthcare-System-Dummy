@@ -3,43 +3,34 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class RoomType
 
-using Backend.Model.Util;
-using Newtonsoft.Json;
 using System;
+using HealthClinicBackend.Backend.Model.Util;
+using Newtonsoft.Json;
 
-namespace Model.Hospital
+namespace HealthClinicBackend.Backend.Model.Hospital
 {
     public class RoomType : Entity
     {
+        public string Name { get; set; }
 
-        private string name;
-
-        public string Name { get => name; set { name = value; } }
-
-
-        public RoomType(string name) : base(Guid.NewGuid().ToString())
+        public RoomType() : base()
         {
-            this.name = name;
+        }
+
+        public RoomType(string name) : base()
+        {
+            Name = name;
         }
 
         [JsonConstructor]
         public RoomType(String serialNumber, string name) : base(serialNumber)
         {
-            this.name = name;
-        }
-
-        public RoomType()
-        {
+            Name = name;
         }
 
         public override bool Equals(object obj)
         {
-            RoomType other = obj as RoomType;
-            if (other == null)
-            {
-                return false;
-            }
-            return this.Name.Equals(other.Name);
+            return obj is RoomType other && this.Name.Equals(other.Name);
         }
 
         public override int GetHashCode()
@@ -49,7 +40,7 @@ namespace Model.Hospital
 
         public override string ToString()
         {
-            return "name: " + this.Name;
+            return "name: " + Name;
         }
     }
 }

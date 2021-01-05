@@ -1,29 +1,50 @@
-﻿using System;
+﻿using HealthClinicBackend.Backend.Model.Blog;
+using System;
+using System.Collections.Generic;
 
-namespace health_clinic_class_diagram.Backend.Dto
+namespace HealthClinicBackend.Backend.Dto
 {
-    public class FeedbackDTO
+    public class FeedbackDto
     {
-        private String text;
-        private DateTime date;
-        private String patientId;
-        private Boolean approved;
-        private String serialNumber;
-        public string SerialNumber { get => serialNumber; set => serialNumber = value; }
-        public string PatientId { get => patientId; set => patientId = value; }
-        public string Text { get => text; set => text = value; }
-        public DateTime Date { get => date; set => date = value; }
-        public Boolean Approved { get => approved; set => approved = value; }
+        public string SerialNumber { get; set; }
+        public string PatientId { get; set; }
+        public string Text { get; set; }
+        public DateTime Date { get; set; }
+        public Boolean Approved { get; set; }
+
+        public FeedbackDto()
+        {
+        }
+
+        public FeedbackDto(Feedback feedback)
+        {
+            SerialNumber = feedback.SerialNumber;
+            PatientId = feedback.PatientId;
+            Text = feedback.Text;
+            Date = feedback.Date;
+            Approved = feedback.Approved;
+        }
+
         public bool IsCorrectText()
         {
             if (Text == null)
                 return false;
             String[] words = Text.Split('\n');
-            return words != null && Text != null && Text.Length > 2;
+            return Text != null && Text.Length > 2;
         }
+
         public bool IsApprovalValid()
         {
             return Approved != null;
+        }
+
+        public List<FeedbackDto> ConvertListToFeedbackDTO(List<Feedback> lists)
+        {
+            List<FeedbackDto> feedbacksDTO = new List<FeedbackDto>();
+            foreach (Feedback feedback in lists)
+                feedbacksDTO.Add(new FeedbackDto(feedback));
+            return feedbacksDTO;
+
         }
     }
 }

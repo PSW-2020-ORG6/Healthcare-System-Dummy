@@ -3,69 +3,82 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class Account
 
-using Backend.Model.Util;
-using Model.Util;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using HealthClinicBackend.Backend.Model.Util;
 
-namespace Model.Accounts
+namespace HealthClinicBackend.Backend.Model.Accounts
 {
     public abstract class Account : Entity
     {
-        protected String name;
-        protected String surname;
-        protected String id;
-        protected String fullName;
-        protected DateTime dateOfBirth;
-        protected String contact;
-        protected String email;
-        protected Address address;
-        protected String password;
-        private string addressSerialNumber;
-
-        public string Name { get => name; set => name = value; }
-        public string Surname { get => surname; set => surname = value; }
-        public string FullName { get => name + " " + surname; set => fullName = value; }
-        public string Id { get => id; set => id = value; }
-        public DateTime DateOfBirth { get => dateOfBirth; set => dateOfBirth = value; }
-        public string Contact { get => contact; set => contact = value; }
-        public string Email { get => email; set => email = value; }
-        public virtual Address Address { get => address; set => address = value; }
-        public String Password { get => password; set => password = value; }
-        public string AddressSerialNumber { get => addressSerialNumber; set => addressSerialNumber = value; }
-
-        public Account(String serialNumber, string name, string surname, string id, DateTime dateOfBirth, string contact, string email, Address address, String password) : base(serialNumber)
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Id { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Contact { get; set; }
+        public string Email { get; set; }
+        [ForeignKey("Address")] public string AddressSerialNumber { get; set; }
+        public virtual Address Address { get; set; }
+        public String Password { get; set; }
+        public Account(String serialNumber, string name, string surname, string id, DateTime dateOfBirth,
+            string contact, string email, Address address, String password) : base(serialNumber)
         {
-            this.name = name;
-            this.surname = surname;
-            this.id = id;
-            this.dateOfBirth = dateOfBirth;
-            this.contact = contact;
-            this.email = email;
-            this.address = address;
-            this.password = password;
+            Name = name;
+            Surname = surname;
+            Id = id;
+            DateOfBirth = dateOfBirth;
+            Contact = contact;
+            Email = email;
+            Address = address;
+            Password = password;
         }
-        public Account(String serialNumber, string name, string surname, string id, DateTime dateOfBirth, string contact, string email) : base(serialNumber)
-        {
-            this.name = name;
-            this.surname = surname;
-            this.id = id;
-            this.dateOfBirth = dateOfBirth;
-            this.contact = contact;
-            this.email = email;
 
+        public Account(string name, string surname, string id, DateTime dateOfBirth,
+            string contact, string email, Address address, String password) : base()
+        {
+            Name = name;
+            Surname = surname;
+            Id = id;
+            DateOfBirth = dateOfBirth;
+            Contact = contact;
+            Email = email;
+            Address = address;
+            Password = password;
         }
+
+        public Account(String serialNumber, string name, string surname, string id, DateTime dateOfBirth,
+            string contact, string email) : base(serialNumber)
+        {
+            Name = name;
+            Surname = surname;
+            Id = id;
+            DateOfBirth = dateOfBirth;
+            Contact = contact;
+            Email = email;
+        }
+
         public Account(String serialNumber, string name, string surname, string id) : base(serialNumber)
         {
-            this.name = name;
-            this.surname = surname;
-            this.id = id;
+            Name = name;
+            Surname = surname;
+            Id = id;
         }
-        public Account(string name, string surname)
+
+        public Account(string name, string surname) : base()
         {
-            this.name = name;
-            this.surname = surname;
+            Name = name;
+            Surname = surname;
         }
-        public Account() { }
+
+        public Account(string serialNumber, string name, string surname) : base(serialNumber)
+        {
+            Name = name;
+            Surname = surname;
+        }
+
+        public Account() : base()
+        {
+        }
 
         public override int GetHashCode()
         {
@@ -75,18 +88,12 @@ namespace Model.Accounts
         public override bool Equals(object obj)
         {
             Account other = obj as Account;
-
-            if (other == null)
-            {
-                return false;
-            }
-
-            return this.Id.Equals(other.Id);
+            return other != null && Id.Equals(other.Id);
         }
 
-        public override string ToString()
+        public bool AreCredentialsValid(string id, string password)
         {
-            return FullName;
+            return Id.Equals(id) && Password.Equals(password);
         }
     }
 }

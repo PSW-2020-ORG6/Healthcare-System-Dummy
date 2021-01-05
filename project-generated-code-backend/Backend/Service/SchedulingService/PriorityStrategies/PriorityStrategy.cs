@@ -3,14 +3,14 @@
 // Created: Sunday, June 7, 2020 4:19:02 PM
 // Purpose: Definition of Interface PriorityStrategy
 
-using Backend.Dto;
 using System.Collections.Generic;
+using HealthClinicBackend.Backend.Dto;
 
-namespace Backend.Service.SchedulingService.PriorityStrategies
+namespace HealthClinicBackend.Backend.Service.SchedulingService.PriorityStrategies
 {
     public interface PriorityStrategy
     {
-        List<AppointmentDTO> FindSuggestedAppointments(SuggestedAppointmentDTO suggestedAppointmentDTO);
+        List<AppointmentDto> FindSuggestedAppointments(SuggestedAppointmentDto suggestedAppointmentDTO);
 
     }
 }

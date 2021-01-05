@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Home page</title>
+    <title>Health Clinic</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="http://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/home.css">
@@ -10,12 +10,13 @@
     <link rel="stylesheet" type="text/css" href="css/registration.css">
     <link rel="stylesheet" type="text/css" href="css/confirmEmail.css">
     <link rel="stylesheet" type="text/css" href="css/search.css">
+    <link rel="stylesheet" type="text/css" href="css/appointment.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" type="text/css" href="css/survey.css">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
-     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css'>
+    <link rel="icon" href="pictures/log.png" type="image/x-icon">
 </head>
 <body>
 
@@ -23,21 +24,39 @@
         <nav class="navbar navbar-expand-lg navbar-custom " id="navigationBar">
             <div class="collapse navbar-collapse " id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <button type="button" class="btn btn-info btn-lg navbar-brand" v-on:click="home">Home</button>
-                    </li>
-                    <li class="nav-item">
-                        <button type="button" class="btn btn-info btn-lg navbar-brand" v-on:click="patient">Patient</button>
+                    <li class="nav-item dropdown">
+                        <button type="button" class="btn btn-info btn-lg nav-link navbar-brand dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Patient menu</button>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" v-on:click="patient">Home</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" v-on:click="account">My account</a>
+                            <a class="dropdown-item" v-on:click="feedbackPatient">Feedbacks</a>
+                            <a class="dropdown-item" v-on:click="appointments">Appointments</a>
+                            <a class="dropdown-item" v-on:click="survey">Survay</a>
+                            <a class="dropdown-item" v-on:click="search">Search</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Log out</a>
+                        </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <button type="button" class="btn btn-info btn-lg navbar-brand" v-on:click="admin">Admin</button>
+                        <button type="button" class="btn btn-info btn-lg nav-link navbar-brand dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin menu</button>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" v-on:click="admin">Home</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" v-on:click="statistics">Statistics</a>
+                            <a class="dropdown-item" v-on:click="feedbackAdmin">Feedbacks</a>
+                            <a class="dropdown-item" href="#">Malicious users</a>
+                            <a class="dropdown-item" v-on:click="search">Search</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Log out</a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <h1 class="navbar-brand" id="clinicLogoTxt">Health Clinic</h1>
                         <img src="pictures/logInverted.png" id="clinicLogoPic">
                     </li>
-                    <li class="nav-item dropdown" id="content">
-                        <button type="button" class="btn1 btn-info btn-lg navbar-brand" id="registration" v-on:click="registration">Registration</button>
+                    <li class="nav-item" id="content">
+                        <button type="button" class="btn1 btn btn-info btn-lg navbar-brand" id="registration" v-on:click="registration">Registration</button>
                     </li>
                 </ul>
             </div>
@@ -64,12 +83,16 @@
     <script src="app/emailConfirmation.js"></script>
     <script src="app/successfulRegistration.js"></script>
     <script src="app/search.js"></script>
-    <script src="app/router.js"></script>
     <script src="app/survey.js"></script>
     <script src="app/statistics.js"></script>
+    <script src="app/feedbackPatient.js"></script>
+    <script src="app/accountInfo.js"></script>
+    <script src="app/feedbackAdmin.js"></script>
+    <script src="app/router.js"></script>
 
-
-
+    <footer>
+        <a>Copyright © 2020 HEALTH CLINIC</a>
+    </footer>
 </body>
 
 </html>

@@ -1,48 +1,55 @@
-﻿using Backend.Dto;
-using Backend.Repository;
-using Model.Accounts;
-using Model.Hospital;
-using Model.Util;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using HealthClinicBackend.Backend.Dto;
+using HealthClinicBackend.Backend.Model.Accounts;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Model.Util;
+using HealthClinicBackend.Backend.Repository.Generic;
 
-namespace Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
+namespace HealthClinicBackend.Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
 {
     class AppointmentGeneralitiesManager
     {
-        private AppointmentDTO appointmentPreferrences;
-        private PhysitianRepository physitianRepository;
-        private RoomRepository roomRepository;
+        private AppointmentDto _appointmentPreferences;
+        private readonly IPhysicianRepository _physicianRepository;
+        private readonly IRoomRepository _roomRepository;
+        private readonly PhysicianAvailabilityService _physicianAvailabilityService;
+        private readonly RoomAvailabilityService _roomAvailabilityService;
 
-        public AppointmentGeneralitiesManager()
+
+        public AppointmentGeneralitiesManager(IPhysicianRepository physicianRepository,
+            IRoomRepository roomRepository,
+            IAppointmentRepository appointmentRepository,
+            IRenovationRepository renovationRepository,
+            IBedReservationRepository bedReservationRepository)
         {
-            this.physitianRepository = new PhysitianFileSystem();
-            this.roomRepository = new RoomFileSystem();
+            _physicianRepository = physicianRepository;
+            _roomRepository = roomRepository;
+            _physicianAvailabilityService = new PhysicianAvailabilityService(appointmentRepository);
+            _roomAvailabilityService =
+                new RoomAvailabilityService(appointmentRepository, renovationRepository, bedReservationRepository);
         }
 
-        public List<AppointmentDTO> GetAllAvailableAppointments(AppointmentDTO appointmentPreferrences)
+        public List<AppointmentDto> GetAllAvailableAppointments(AppointmentDto appointmentPreferences)
         {
-            this.appointmentPreferrences = appointmentPreferrences;
-            List<AppointmentDTO> appointments = new List<AppointmentDTO>();
+            _appointmentPreferences = appointmentPreferences;
+            List<AppointmentDto> appointments = new List<AppointmentDto>();
 
             List<TimeInterval> allTimeIntervals = GetAllTimeIntervals();
-            List<Physitian> allPhysitians = GetAllPhysitians();
+            List<Physician> allPhysicians = GetAllPhysicians();
             List<Room> allRooms = GetAllRooms();
-
-            PhysitianAvailabilityService physitianAvailabilityService = new PhysitianAvailabilityService();
-            RoomAvailabilityService roomAvailabilityService = new RoomAvailabilityService();
 
             foreach (TimeInterval timeInterval in allTimeIntervals)
             {
-                foreach (Physitian physitian in allPhysitians)
+                foreach (Physician physician in allPhysicians)
                 {
-                    if (physitianAvailabilityService.IsPhysitianAvailable(physitian, timeInterval))
+                    if (_physicianAvailabilityService.IsPhysicianAvailable(physician, timeInterval))
                     {
                         foreach (Room room in allRooms)
                         {
-                            if (roomAvailabilityService.IsRoomAvailable(room, timeInterval))
+                            if (_roomAvailabilityService.IsRoomAvailable(room, timeInterval))
                             {
-                                AppointmentDTO appointmentDTO = createAppointment(physitian, room, timeInterval);
-                                appointments.Add(appointmentDTO);
+                                AppointmentDto appointmentDto = CreateAppointment(physician, room, timeInterval);
+                                appointments.Add(appointmentDto);
                             }
                         }
                     }
@@ -52,45 +59,52 @@ namespace Backend.Service.SchedulingService.AppointmentGeneralitiesOptions
             return appointments;
         }
 
-        private AppointmentDTO createAppointment(Physitian physitian, Room room, TimeInterval timeInterval)
+        private AppointmentDto CreateAppointment(Physician physician, Room room, TimeInterval timeInterval)
         {
-            AppointmentDTO appointment = new AppointmentDTO();
-            appointment.ProcedureType = appointmentPreferrences.ProcedureType;
-            appointment.Patient = appointmentPreferrences.Patient;
+            AppointmentDto appointment = new AppointmentDto();
+            appointment.ProcedureType = _appointmentPreferences.ProcedureType;
+            appointment.Patient = _appointmentPreferences.Patient;
             appointment.Time = timeInterval;
-            appointment.Physitian = physitian;
+            appointment.Physician = physician;
             appointment.Room = room;
             return appointment;
         }
-        private List<Physitian> GetAllPhysitians()
+
+        private List<Physician> GetAllPhysicians()
         {
-            List<Physitian> physitians = new List<Physitian>();
-            if (appointmentPreferrences.IsPreferedPhysitianSelected())
+            List<Physician> physicians = new List<Physician>();
+            if (_appointmentPreferences.IsPreferedPhysicianSelected())
             {
-                physitians.Add(appointmentPreferrences.Physitian);
+                physicians.Add(_appointmentPreferences.Physician);
             }
             else
             {
-                physitians = physitianRepository.GetPhysitiansByProcedureType(appointmentPreferrences.ProcedureType);
+                physicians = _physicianRepository.GetByProcedureType(_appointmentPreferences.ProcedureType);
             }
-            return physitians;
+
+            return physicians;
         }
+
         private List<Room> GetAllRooms()
         {
-            return roomRepository.GetRoomsByProcedureType(appointmentPreferrences.ProcedureType);
+            return _roomRepository.GetByProcedureType(_appointmentPreferences.ProcedureType);
         }
+
         private List<TimeInterval> GetAllTimeIntervals()
         {
-            TimeIntervalGenerator generator = new TimeIntervalGenerator(appointmentPreferrences.ProcedureType, appointmentPreferrences.RestrictedHours);
-            List<TimeInterval> timeIntervals = new List<TimeInterval>();
-            if (appointmentPreferrences.IsPreferredDateSelected())
+            TimeIntervalGenerator generator = new TimeIntervalGenerator(_appointmentPreferences.ProcedureType,
+                _appointmentPreferences.RestrictedHours);
+            List<TimeInterval> timeIntervals;
+            if (_appointmentPreferences.IsPreferredDateSelected())
             {
-                timeIntervals = generator.generateTimeIntervalsForDay(appointmentPreferrences.Date);
+                timeIntervals = generator.GenerateTimeIntervalsForDay(_appointmentPreferences.Date);
             }
             else
             {
-                timeIntervals = generator.generateAllTimeIntervals(); ;
+                timeIntervals = generator.GenerateAllTimeIntervals();
+                ;
             }
+
             return timeIntervals;
         }
     }

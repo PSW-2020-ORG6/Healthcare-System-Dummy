@@ -1,6 +1,7 @@
 ﻿Vue.component("registration", {
 	data: function () {
 		return {
+			doctorsList: [],
 			patientDTO: {
 				name: null,
 				surname: null,
@@ -31,9 +32,19 @@
 				image: null,
 				guest: false,
 				emailConfirmed: false,
-				sucessFlag: false,
+				chosenDoctor:null,
 			},
 		}
+	},
+	mounted() {
+		axios
+			.get('/registration/allPhysitians')
+			.then(response => {
+				this.doctorsList = response.data
+			})
+			.catch(error => {
+				alert(error)
+			})
 	},
 	template: `
     <div class="container">
@@ -243,6 +254,16 @@
 				<td></td>
 			</tr>
 			<tr>
+				<td><label>Chosen doctor</label></td>
+				<td><select class="combo form-control input" v-model = "patientDTO.chosenDoctor">
+                     <option div  v-for="doctor in doctorsList" v-bind:value="doctor.serialNumber">{{doctor.name}} {{doctor.surname}}</option>
+                </select></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td></td>
+			</tr>
+			<tr>
                  <td></td>
                 <td align="left"><input type="file" accept="image/*" @change=uploadImage></td>
 
@@ -304,6 +325,7 @@
 			};
 		},
 		AddPatient: function (patientDTO) {
+			alert(this.patientDTO.chosenDoctor)
 			if (patientDTO.name != null && patientDTO.surname != null && patientDTO.parentName != null && patientDTO.id != null
 				&& patientDTO.dateOfBirth != null && patientDTO.placeOfBirth != null && patientDTO.municipalityOfBirth != null && patientDTO.stateOfBirth != null
 				&& patientDTO.nationality != null && patientDTO.citizenship != null && patientDTO.address != null && patientDTO.placeOfResidence != null
@@ -311,7 +333,7 @@
 				&& patientDTO.maritalStatus != null && patientDTO.contact != null && patientDTO.email != null && patientDTO.password != null
 				&& patientDTO.gender != null && patientDTO.healthInsuranceNumber != null) {
 				axios
-					.post("http://localhost:49900/registration/registerPatient", patientDTO)
+					.post("/registration/registerPatient", patientDTO)
 					.then(response => {
 						alert("Mail has been sent.");
 					})

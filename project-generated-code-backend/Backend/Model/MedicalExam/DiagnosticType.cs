@@ -3,36 +3,29 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class DiagnosticType
 
-using Backend.Model.Util;
-using Newtonsoft.Json;
 using System;
+using HealthClinicBackend.Backend.Model.Util;
+using Newtonsoft.Json;
 
-namespace Model.MedicalExam
+namespace HealthClinicBackend.Backend.Model.MedicalExam
 {
     public class DiagnosticType : Entity
     {
-        private String name;
+        public string Name { get; set; }
 
-        public string Name { get => name; }
-
-        public DiagnosticType(string name) : base(Guid.NewGuid().ToString())
+        public DiagnosticType(string name) : base()
         {
-            this.name = name;
+            Name = name;
         }
 
         [JsonConstructor]
         public DiagnosticType(String serialNumber, string name) : base(serialNumber)
         {
-            this.name = name;
+            Name = name;
         }
         public override bool Equals(object obj)
         {
-            DiagnosticType other = obj as DiagnosticType;
-            if (other == null)
-            {
-                return false;
-            }
-            return this.Name.Equals(other.Name);
+            return obj is DiagnosticType other && this.Name.Equals(other.Name);
         }
         public override int GetHashCode()
         {

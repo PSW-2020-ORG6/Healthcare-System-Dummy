@@ -1,68 +1,71 @@
-﻿using health_clinic_class_diagram.Backend.Service.MedicineService;
-using Model.Hospital;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Service.MedicineService;
 
-namespace Backend.Controller.SuperintendentControllers
+namespace HealthClinicBackend.Backend.Controller.SuperintendentControllers
 {
     public class SuperintendentMedicineController
     {
-        private SuperintendentMedicineService superintendentMedicineService;
-        public SuperintendentMedicineController()
+        private readonly SuperintendentMedicineService _superintendentMedicineService;
+
+        public SuperintendentMedicineController(SuperintendentMedicineService superintendentMedicineService)
         {
-            superintendentMedicineService = new SuperintendentMedicineService();
-        }
-        public List<Medicine> getAllApproved()
-        {
-            return superintendentMedicineService.getAllApproved();
+            _superintendentMedicineService = superintendentMedicineService;
         }
 
-        public List<Rejection> getAllRejected()
+        public List<Medicine> GetAllApproved()
         {
-            return superintendentMedicineService.getAllRejected();
+            return _superintendentMedicineService.GetAllApproved();
         }
 
-        public List<Medicine> getAllWaiting()
+        public List<Rejection> GetAllRejected()
         {
-            return superintendentMedicineService.getAllWaiting();
+            return _superintendentMedicineService.GetAllRejected();
+        }
+
+        public List<Medicine> GetAllWaiting()
+        {
+            return _superintendentMedicineService.GetAllWaiting();
         }
 
         public void DeleteWaitingMedicine(Medicine medicine)
         {
-            superintendentMedicineService.DeleteWaitingMedicine(medicine);
+            _superintendentMedicineService.DeleteWaitingMedicine(medicine);
         }
 
-        public void NewWaitinMedicine(Medicine medicine)
+        public void NewWaitingMedicine(Medicine medicine)
         {
-            superintendentMedicineService.NewWaitinMedicine(medicine);
+            _superintendentMedicineService.NewWaitingMedicine(medicine);
         }
 
-        public void EditWaitingMedicine(Medicine medicineDTO)
+        public void EditWaitingMedicine(Medicine medicineDto)
         {
-            superintendentMedicineService.EditWaitingMedicine(medicineDTO);
+            _superintendentMedicineService.EditWaitingMedicine(medicineDto);
         }
 
         public void DeleteRejection(Rejection rejection)
         {
-            superintendentMedicineService.DeleteRejection(rejection);
+            _superintendentMedicineService.DeleteRejection(rejection);
         }
 
         public void NewRejection(Rejection rejection)
         {
-            superintendentMedicineService.NewRejection(rejection);
+            _superintendentMedicineService.NewRejection(rejection);
         }
 
         public void EditRejection(Rejection rejection)
         {
-            superintendentMedicineService.EditRejection(rejection);
+            _superintendentMedicineService.EditRejection(rejection);
         }
 
         public void DeleteApprovedMedicine(Medicine medicine)
         {
-            superintendentMedicineService.DeleteApprovedMedicine(medicine);
+            _superintendentMedicineService.DeleteApprovedMedicine(medicine);
         }
+
         public void NewApprovedMedicine(Medicine medicine)
         {
-            superintendentMedicineService.NewApprovedMedicine(medicine);
+            _superintendentMedicineService.NewApprovedMedicine(medicine);
         }
     }
 }

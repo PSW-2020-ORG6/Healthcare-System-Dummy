@@ -1,17 +1,17 @@
-﻿using health_clinic_class_diagram.Backend.Model.Hospital;
-using health_clinic_class_diagram.Backend.Repository;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Repository.Generic;
 
-namespace health_clinic_class_diagram.Backend.Service.HospitalResourcesService
+namespace HealthClinicBackend.Backend.Service.HospitalResourcesService
 {
     public class FloorService
     {
-        public FloorRepository floorRepository;
+        private readonly IFloorRepository _floorRepository;
 
-        public FloorService()
+        public FloorService(IFloorRepository floorRepository)
         {
-            floorRepository = new FloorFileSystem();
+            _floorRepository = floorRepository;
         }
 
         public Floor GetById()
@@ -21,7 +21,7 @@ namespace health_clinic_class_diagram.Backend.Service.HospitalResourcesService
 
         public List<Floor> GetAll()
         {
-            return floorRepository.GetAll();
+            return _floorRepository.GetAll();
         }
 
         public void EditFloor(Floor floor)
@@ -31,7 +31,7 @@ namespace health_clinic_class_diagram.Backend.Service.HospitalResourcesService
 
         public void NewFloor(Floor floor)
         {
-            floorRepository.Save(floor);
+            _floorRepository.Save(floor);
         }
 
         public void DeleteFloor(Floor floor)

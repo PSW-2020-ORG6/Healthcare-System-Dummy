@@ -3,15 +3,23 @@
 // Created: Sunday, June 7, 2020 4:19:02 PM
 // Purpose: Definition of Class EquipmentService
 
-using Backend.Repository;
-using Model.Hospital;
 using System;
 using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Repository.DatabaseSql;
+using HealthClinicBackend.Backend.Repository.Generic;
 
-namespace Backend.Service.HospitalResourcesService
+namespace HealthClinicBackend.Backend.Service.HospitalResourcesService
 {
     public class EquipmentService
     {
+        private readonly IEquipmentRepository _equipmentRepository;
+
+        public EquipmentService(IEquipmentRepository equipmentRepository)
+        {
+            _equipmentRepository = equipmentRepository;
+        }
+
         public Equipment GetById()
         {
             throw new NotImplementedException();
@@ -19,7 +27,7 @@ namespace Backend.Service.HospitalResourcesService
 
         public List<Equipment> GetAll()
         {
-            return equipmentRepository.GetAll();
+            return _equipmentRepository.GetAll();
         }
 
         public void EditEquipment(Equipment equipment)
@@ -29,20 +37,12 @@ namespace Backend.Service.HospitalResourcesService
 
         public void NewEquipment(Equipment equipment)
         {
-            equipmentRepository.Save(equipment);
+            _equipmentRepository.Save(equipment);
         }
 
         public void DeleteEquipment(Equipment equipment)
         {
             throw new NotImplementedException();
         }
-
-        public EquipmentService()
-        {
-            equipmentRepository = new EquipmentFileSystem();
-        }
-        public Backend.Repository.EquipmentRepository equipmentRepository;
-
-
     }
 }

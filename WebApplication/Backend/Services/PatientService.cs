@@ -1,6 +1,11 @@
-﻿using Model.Accounts;
-using System.Collections.Generic;
-using WebApplication.Backend.Repositorys;
+﻿using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.Accounts;
+using HealthClinicBackend.Backend.Dto;
+using System;
+using System.Linq;
+using HealthClinicBackend.Backend.Model.PharmacySupport;
+using HealthClinicBackend.Backend.Repository.Generic;
+using WebApplication.Backend.DTO;
 
 namespace WebApplication.Backend.Services
 {
@@ -9,12 +14,18 @@ namespace WebApplication.Backend.Services
     /// </summary>
     public class PatientService
     {
-        private PatientRepository patientRepository;
-        public PatientService()
+        private readonly IPatientRepository _patientRepository;
+        private readonly IActionAndBenefitMessageRepository _actionsAndBenefitsRepository;
+
+        private PatientDto patientDTO = new PatientDto();
+
+        public PatientService(IPatientRepository patientRepository,
+            IActionAndBenefitMessageRepository actionsAndBenefitsRepository)
         {
-            this.patientRepository = new PatientRepository();
+            _patientRepository = patientRepository;
+            _actionsAndBenefitsRepository = actionsAndBenefitsRepository;
         }
-        ///Tanja Drcelic RA124/2017
+
         /// <summary>
         ///calls method for get all patients in patients table
         ///</summary>
@@ -23,23 +34,47 @@ namespace WebApplication.Backend.Services
         ///</returns>
         internal List<Patient> GetAllPatients()
         {
-            return patientRepository.GetAllPatients();
+            return _patientRepository.GetAll();
         }
 
-
-        ///Aleksa Repović
         /// <summary>
         ///Get patient from patients table by ID
         ///</summary>
         ///<returns>
         ///single instance of Patient object
         ///</returns
-        internal Patient GetPatientById(string patientId)
+        internal PatientDto GetPatientById(string patientId)
         {
-            Patient returnValue = patientRepository.GetPatientById(patientId);
-            returnValue.Address = patientRepository.getAddress(returnValue.Address.SerialNumber);
-            return returnValue;
+            return patientDTO.ConvertToPatientDTO(_patientRepository.GetById(patientId) ??
+                                                  _patientRepository.GetByJmbg(patientId));
         }
 
+        internal List<Patient> GetMaliciousPatients()
+        {
+            return _patientRepository.GetAll().Where(p => p.IsMalicious).ToList();
+        }
+
+        internal bool BlockMaliciousPatient(string patientId)
+        {
+            var patient = _patientRepository.GetByJmbg(patientId) ?? _patientRepository.GetById(patientId);
+            if (!patient.IsMalicious) return false;
+            patient.IsBlocked = true;
+            _patientRepository.Update(patient);
+            return true;
+        }
+
+        public List<ActionAndBenefitMessage> GetAdvertisements()
+        {
+            TimeIntervalDTO t = new TimeIntervalDTO();
+            List<ActionAndBenefitMessage> actionAndBenefitMessages = new List<ActionAndBenefitMessage>();
+            foreach (ActionAndBenefitMessage a in
+                _actionsAndBenefitsRepository.GetAll())
+            {
+                if (t.IsDateIntervalValid(a.DateFrom, a.DateTo))
+                    actionAndBenefitMessages.Add(a);
+            }
+
+            return actionAndBenefitMessages;
+        }
     }
 }

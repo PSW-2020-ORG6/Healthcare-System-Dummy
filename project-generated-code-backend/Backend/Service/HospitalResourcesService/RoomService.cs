@@ -3,18 +3,24 @@
 // Created: Sunday, June 7, 2020 4:19:02 PM
 // Purpose: Definition of Class RoomService
 
-using Backend.Repository;
-using HCI_SIMS_PROJEKAT.Backend.Repository;
-using HealthClinic.Backend.Model.Hospital;
-using Model.Hospital;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Repository.Generic;
 
-namespace Backend.Service.HospitalResourcesService
+namespace HealthClinicBackend.Backend.Service.HospitalResourcesService
 {
     public class RoomService
     {
+        private readonly IRoomRepository _roomRepository;
+        private readonly IRoomTypeRepository _roomTypeRepository;
+
+        public RoomService(IRoomRepository roomRepository, IRoomTypeRepository roomTypeRepository)
+        {
+            _roomRepository = roomRepository;
+            _roomTypeRepository = roomTypeRepository;
+        }
 
         public Room GetById(String id)
         {
@@ -23,33 +29,32 @@ namespace Backend.Service.HospitalResourcesService
 
         public List<Room> GetAll()
         {
-            return roomRepository.GetAll();
+            return _roomRepository.GetAll();
         }
 
         public void EditRoom(Room room)
         {
-            roomRepository.Update(room);
+            _roomRepository.Update(room);
         }
 
         public void NewRoom(Room room)
         {
-            roomRepository.Save(room);
+            _roomRepository.Save(room);
         }
 
         public void DeleteRoom(Room room)
         {
-            roomRepository.Delete(room.SerialNumber);
+            _roomRepository.Delete(room.SerialNumber);
         }
 
         public void AddEquipment(Equipment equipment, Room room)
         {
             room.AddEquipment(equipment);
-            roomRepository.Update(room);
+            _roomRepository.Update(room);
         }
 
         public void RemoveEquipmentById(String id, Room room)
         {
-
             foreach (Equipment e in room.Equipment.ToList())
             {
                 if (e.SerialNumber.Equals(id))
@@ -57,67 +62,44 @@ namespace Backend.Service.HospitalResourcesService
                     room.RemoveEquipment(e);
                 }
             }
-            roomRepository.Update(room);
+
+            _roomRepository.Update(room);
         }
 
         public List<RoomType> GetAllRoomTypes()
         {
-            return roomTypeRepository.GetAll();
+            return _roomTypeRepository.GetAll();
         }
 
         public List<RoomType> GetAutoAllRoomTypes()
         {
             List<RoomType> types = new List<RoomType>();
-            types.AddRange(roomTypeRepository.GetAll());
-            types.AddRange(roomBedTypeRepository.GetAll());
+            types.AddRange(_roomTypeRepository.GetAll());
             return types;
-        }
-
-        public List<RoomBedType> GetBedRoomTypes()
-        {
-            return roomBedTypeRepository.GetAll();
         }
 
         public void AddRoomType(RoomType roomType)
         {
-            roomTypeRepository.Save(roomType);
+            _roomTypeRepository.Save(roomType);
         }
-
-        internal void AddRoomBedType(RoomBedType roomType)
-        {
-            roomBedTypeRepository.Save(roomType);
-        }
-
 
         public bool RoomNumberExists(int RoomNumber)
         {
             bool exists = false;
-            foreach (Room r in roomRepository.GetAll())
+            foreach (Room r in _roomRepository.GetAll())
             {
                 if (r.Id == RoomNumber)
                 {
                     exists = true;
                 }
             }
+
             return exists;
         }
 
         public List<Equipment> GetAllEquipment(Room room)
         {
-            return roomRepository.GetById(room.SerialNumber).Equipment;
-        }
-
-
-        private Backend.Repository.RoomRepository roomRepository;
-        private RoomTypeRepository roomTypeRepository;
-        private RoomBedTypeRepository roomBedTypeRepository;
-
-
-        public RoomService()
-        {
-            roomTypeRepository = new RoomTypeFileSystem();
-            roomRepository = new RoomFileSystem();
-            roomBedTypeRepository = new RoomBedTypeFileSystem();
+            return _roomRepository.GetById(room.SerialNumber).Equipment;
         }
     }
 }

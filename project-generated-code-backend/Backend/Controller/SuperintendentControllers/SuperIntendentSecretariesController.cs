@@ -1,40 +1,41 @@
-﻿using HealthClinic.Backend.Service.HospitalAccountsService;
-using Model.Accounts;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.Accounts;
+using HealthClinicBackend.Backend.Service.HospitalAccountsService;
 
-namespace HealthClinic.Backend.Controller.SuperintendentControllers
+namespace HealthClinicBackend.Backend.Controller.SuperintendentControllers
 {
-    public class SuperIntendentSecretariesController
+    public class SuperintendentSecretariesController
     {
-        public SecretaryAccountService secretaryService;
+        private readonly SecretaryAccountService _secretaryService;
 
-        public SuperIntendentSecretariesController()
+        public SuperintendentSecretariesController(SecretaryAccountService secretaryAccountService)
         {
-            secretaryService = new SecretaryAccountService();
+            _secretaryService = secretaryAccountService;
         }
 
         public List<Secretary> GetAllSecretaries()
         {
-            return secretaryService.GetAllSecretaries();
+            return _secretaryService.GetAllSecretaries();
         }
+
         public void NewSecretary(Secretary secretary)
         {
-            secretaryService.NewSecretary(secretary);
+            _secretaryService.NewSecretary(secretary);
         }
 
         public void EditSecretary(Secretary secretary)
         {
-            secretaryService.EditSecretary(secretary);
+            _secretaryService.EditSecretary(secretary);
         }
 
         public void DeleteSecretary(Secretary secretary)
         {
-            secretaryService.DeleteSecretary(secretary);
+            _secretaryService.DeleteSecretary(secretary);
         }
 
-        public bool jmbgExists(string jmbg)
+        public bool JmbgExists(string jmbg)
         {
-            return secretaryService.jmbgExists(jmbg);
+            return _secretaryService.jmbgExists(jmbg);
         }
     }
 }

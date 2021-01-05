@@ -1,8 +1,8 @@
-﻿using GraphicEditor.Repositories;
-using GraphicEditor.Repositories.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using HealthClinicBackend.Backend.Repository.DatabaseSql;
+using HealthClinicBackend.Backend.Repository.Generic;
 using Xunit;
 
 namespace GraphicEditorTests
@@ -13,26 +13,25 @@ namespace GraphicEditorTests
 
         public EquipmentSearchesTests()
         {
-            _eqipmentRepository = new EquipmentRepository();
+            _eqipmentRepository = new EquipmentDatabaseSql();
         }
 
         [Fact]
-        public void GetEquipmentByName_EquipmentExist_ReturnEquipments()
+        public void GetEquipmentByName_EquipmentExist_ReturnEquipment()
         {
             //Act
-            var equipments = _eqipmentRepository.GetEquipmentsByName("Bed");
+            var equipment = _eqipmentRepository.GetByName("Bed 1")[0];
 
             //Assert
-            Assert.NotNull(equipments);
-            foreach (var equipment in equipments)
-                Assert.Equal("Bed", equipment.Name);
+            Assert.NotNull(equipment);
+            Assert.Equal("Bed 1", equipment.Name);
         }
 
         [Fact]
         public void EquipmentDoesNotExist()
         {
             //Act
-            var equipments = _eqipmentRepository.GetEquipmentsByName("pera");
+            var equipments = _eqipmentRepository.GetByName("pera");
 
             //Assert
             Assert.Empty(equipments);

@@ -1,11 +1,11 @@
 ﻿using IntegrationAdapters.Models;
 using IntegrationAdapters.Repositories;
 using IntegrationAdapters.Services;
-using Model.Util;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using HealthClinicBackend.Backend.Model.Util;
 using Xunit;
 
 namespace IntegrationAdaptersTests
@@ -18,7 +18,7 @@ namespace IntegrationAdaptersTests
         public void Sends_files_successfully()
         {  
             SftpService service = new SftpService();
-            bool success = service.SendFile(@"C:\Users\dragana\Desktop\Projekat PSW\Healthcare-System\IntegrationAdaptersTests\bin\Debug\netcoreapp3.1\testFile.txt");
+            bool success = service.SendFile(@"tests/test.txt");
             Assert.True(success);   
         }
 

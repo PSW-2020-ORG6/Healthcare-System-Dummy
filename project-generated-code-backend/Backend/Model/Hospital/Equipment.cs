@@ -3,68 +3,66 @@
 // Created: Friday, May 15, 2020 23:46:22
 // Purpose: Definition of Class Equipment
 
-using Backend.Model.Util;
-using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using HealthClinicBackend.Backend.Model.Util;
+using Newtonsoft.Json;
 
-namespace Model.Hospital
+namespace HealthClinicBackend.Backend.Model.Hospital
 {
     public class Equipment : Entity
     {
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public string RoomId { get; set; }
+        [ForeignKey("Building")] public string BuildingSerialNumber { get; set; }
+        public Building Building { get; set; }
+        [ForeignKey("Floor")] public string FloorSerialNumber { get; set; }
+        public Floor Floor { get; set; }
+        [ForeignKey("Room")] public string RoomSerialNumber { get; set; }
+        public Room Room { get; set; }
 
-        private String name;
-        private String id;
-        private String roomId;
-
-        public Equipment() : base(Guid.NewGuid().ToString()) { }
-        public Equipment(string name, string id) : base(Guid.NewGuid().ToString())
+        public Equipment() : base()
         {
-            this.name = name;
-            this.id = id;
+        }
+
+        public Equipment(string name, string id) : base()
+        {
+            Name = name;
+            Id = id;
         }
 
         [JsonConstructor]
-        public Equipment(String serialNumber, string name, string id) : base()
+        public Equipment(String serialNumber, string name, string id) : base(serialNumber)
         {
-            this.SerialNumber = serialNumber;
-            this.name = name;
-            this.id = id;
+            Name = name;
+            Id = id;
         }
-
 
         public Equipment(Equipment equipment) : base(equipment.SerialNumber)
         {
-            this.name = equipment.name;
-            this.id = equipment.id;
+            Name = equipment.Name;
+            Id = equipment.Id;
         }
-
-        public string Name { get => name; set { name = value; } }
-        public string Id { get => id; set { id = value; } }
-
-        public string RoomId { get => roomId; set => roomId = value; }
-        public string BuildingSerialNumber { get; set; }
-        public string FloorSerialNumber { get; set; }
-        public string RoomSerialNumber { get; set; }
 
         public override bool Equals(object obj)
         {
-            Equipment other = obj as Equipment;
-
-            if (other == null)
+            if (!(obj is Equipment other))
             {
                 return false;
             }
 
-            return this.Name.Equals(other.Name) && this.Id.Equals(other.Id);
+            return Name.Equals(other.Name) && Id.Equals(other.Id);
         }
 
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
         public override string ToString()
         {
-            return "name: " + this.Name + "\nid: " + this.Id;
+            return "name: " + Name + "\nid: " + Id;
         }
     }
 }

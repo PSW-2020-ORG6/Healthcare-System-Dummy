@@ -3,56 +3,55 @@
 // Created: Sunday, June 7, 2020 4:19:02 PM
 // Purpose: Definition of Class SecretaryHospitalController
 
-using Backend.Service.HospitalAccountsService;
-using Backend.Service.HospitalResourcesService;
-using health_clinic_class_diagram.Backend.Service.HospitalAccountsService;
-using HealthClinic.Backend.Service.HospitalAccountsService;
-using Model.Accounts;
-using Model.Hospital;
-using Model.Schedule;
-using Model.Util;
 using System.Collections.Generic;
+using HealthClinicBackend.Backend.Model.Accounts;
+using HealthClinicBackend.Backend.Model.Hospital;
+using HealthClinicBackend.Backend.Model.Schedule;
+using HealthClinicBackend.Backend.Model.Util;
+using HealthClinicBackend.Backend.Service.HospitalAccountsService;
+using HealthClinicBackend.Backend.Service.HospitalResourcesService;
 
-namespace Backend.Controller.SecretaryControllers
+namespace HealthClinicBackend.Backend.Controller.SecretaryControllers
 {
     public class SecretaryHospitalController
     {
-        public HospitalService hospitalService;
-        public RoomService roomService;
-        public PhysicianAccountService physicianService;
-        public PatientAccountsService patientAccountsService;
+        private readonly HospitalService _hospitalService;
+        private readonly RoomService _roomService;
+        private readonly PhysicianAccountService _physicianService;
+        private readonly PatientAccountsService _patientAccountsService;
 
-        public SecretaryHospitalController()
+        public SecretaryHospitalController(HospitalService hospitalService, RoomService roomService,
+            PhysicianAccountService physicianAccountService, PatientAccountsService patientAccountsService)
         {
-            hospitalService = new HospitalService();
-            roomService = new RoomService();
-            physicianService = new PhysicianAccountService();
-            patientAccountsService = new PatientAccountsService();
+            _hospitalService = hospitalService;
+            _roomService = roomService;
+            _physicianService = physicianAccountService;
+            _patientAccountsService = patientAccountsService;
         }
 
         public List<Patient> GetAllPatients()
         {
-            return patientAccountsService.getAllPatients();
+            return _patientAccountsService.GetAllPatients();
         }
 
-        public List<Physitian> GetAllPhysitians()
+        public List<Physician> GetAllPhysicians()
         {
-            return physicianService.GetAllPhysitians();
+            return _physicianService.GetAllPhysicians();
         }
 
         public List<Room> GetAllRooms()
         {
-            return roomService.GetAll();
+            return _roomService.GetAll();
         }
 
         public List<Country> GetAllCountries()
         {
-            return hospitalService.getAllCountries();
+            return _hospitalService.GetAllCountries();
         }
 
         public List<ProcedureType> GetAllProcedureTypes()
         {
-            return hospitalService.GetAllProcedureTypes();
+            return _hospitalService.GetAllProcedureTypes();
         }
     }
 }

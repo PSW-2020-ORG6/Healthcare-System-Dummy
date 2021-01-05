@@ -1,5 +1,5 @@
-﻿using GraphicEditor.Repositories;
-using GraphicEditor.Repositories.Interfaces;
+﻿using HealthClinicBackend.Backend.Repository.DatabaseSql;
+using HealthClinicBackend.Backend.Repository.Generic;
 using Xunit;
 
 namespace GraphicEditorTests
@@ -11,26 +11,25 @@ namespace GraphicEditorTests
         public BuildingSearchesTests()
         {
             // Arrange
-            _buildingRepository = new BuildingRepository();
+            _buildingRepository = new BuildingDatabaseSql();
         }
 
         [Fact]
-        public void GetBuildingsByName_BuildingsExist_ReturnBuildings()
+        public void GetBuildingByName_BuildingExist_ReturnBuilding()
         {
             // Act
-            var buildings = _buildingRepository.GetBuildingsByName("Cardiology");
+            var building = _buildingRepository.GetByName("Cardiology")[0];
 
             // Assert
-            Assert.NotNull(buildings);
-            foreach (var building in buildings)
-                Assert.Equal("Cardiology", building.Name);
+            Assert.NotNull(building);
+            Assert.Equal("Cardiology", building.Name);
         }
 
         [Fact]
         public void GetBuildingsByName_BuildingsDontExist_ReturnNull()
         {
             // Act
-            var buildings = _buildingRepository.GetBuildingsByName("agfsdgdfhr");
+            var buildings = _buildingRepository.GetByName("agfsdgdfhr");
 
             // Assert
             Assert.Empty(buildings);

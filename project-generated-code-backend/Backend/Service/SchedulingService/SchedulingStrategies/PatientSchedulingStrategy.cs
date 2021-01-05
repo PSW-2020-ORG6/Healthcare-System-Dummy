@@ -3,19 +3,18 @@
 // Created: Sunday, June 7, 2020 4:19:02 PM
 // Purpose: Definition of Class PatientSchedulingStrategy
 
-using Backend.Dto;
-using Model.Accounts;
-using Model.Schedule;
+using HealthClinicBackend.Backend.Dto;
+using HealthClinicBackend.Backend.Util;
 
-namespace Backend.Service.SchedulingService.SchedulingStrategies
+namespace HealthClinicBackend.Backend.Service.SchedulingService.SchedulingStrategies
 {
     public class PatientSchedulingStrategy : SchedulingStrategy
     {
         private const int DISALLOW_SCHEDULING_HOURS = 24;
-        public AppointmentDTO PrepareAppointment(AppointmentDTO appointment)
+        public AppointmentDto PrepareAppointment(AppointmentDto appointment)
         {
             appointment.RestrictedHours = DISALLOW_SCHEDULING_HOURS;
-            appointment.ProcedureType = new ProcedureType("Pregled opšte prakse", 39, new Specialization("Opšta praksa"));
+            appointment.ProcedureType = Constants.GeneralPracticeExam;
             appointment.Urgency = false;
             return appointment;
         }
